@@ -1,0 +1,9362 @@
+==  Expression Language (FEEL)
+
+=== Introduction
+
+In *DMN*, all decision logic is represented as _boxed expressions_. Clause 7.2 introduced the concept of the boxed expression and defined two simple kinds: boxed literal expressions and boxed invocations. Clause 8 defined decision tables, a very important kind of boxed expression__.__ This section completes the graphical notation for decision logic, by defining other kinds of boxed expressions.
+
+The expressions 'in the boxes' are FEEL expressions. FEEL stands for Friendly Enough Expression Language and it has the following features:
+
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+
+Side-effect freeSimple data model with numbers, dates, strings, lists, and contextsSimple syntax designed for a wide audienceThree-valued logic (*true, false, null*)This section also completely specifies the syntax and semantics of FEEL. The syntax is specified as a grammar (10.3.1). The subset of the syntax intended to be rendered graphically as a boxed expression is also specified as a meta-model (10.5).
+
+FEEL has two roles in *DMN*:
+
+[arabic]
+. {blank}
+. {blank}
+
+=== As a textual notation in the boxes of boxed expressions such as decision tables.As a slightly larger language to represent the logic of expressions and DRGs for the main purpose of composing the semantics in a simple and uniform way. Notation
+
+==== Boxed Expressions
+
+This section builds on the generic notation for decision logic and boxed expressions defined in clause 7.2.
+
+We define a graphical notation for decision logic called *boxed expressions*. This notation serves to decompose the decision logic model into small pieces that can be associated with DRG artifacts. The DRG plus the boxed expressions form a complete, mostly graphical language that completely specifies Decision Models.
+
+A boxed expression is either:
+
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+
+a decision tablea boxed FEEL expressiona boxed invocationa boxed contexta boxed lista relationa boxed functiona boxed conditionala boxed filter, ora boxed iteratorBoxed expressions are defined recursively, _i.e.,_ boxed expressions can contain other boxed expressions. The top-level boxed expression corresponds to the decision logic of a single DRG artifact. This boxed expression SHALL have a name box that contains the name of the DRG artifact. The name box may be attached in a single box on top, as shown in Figure 10‑1:
+
+image:extracted-media/media/image84.emf[image,width=204,height=65]
+
+[#_Toc87278840 .anchor]##*Figure 10‑1: Boxed expression*
+
+Alternatively, the name box and expression box can be separated by white space and connected on the left side with a line, as shown in Figure 10‑2:
+
+image:extracted-media/media/image85.wmf[image,width=206,height=107]
+
+[#_Toc87278841 .anchor]##*Figure 10‑2: Boxed expression with separated name and expression boxes*
+
+Graphical tools are expected to support appropriate graphical links, for example, clicking on a decision shape opens a decision table.
+
+Color is suggested, but does not influence the meaning. In section 10:
+
+* {blank}
+* {blank}
+
+Green is used for names of parameters, names of context entries, keywords in boxed conditionals and boxed iterators, and brackets in boxed filters.Embedded decision tables are colored as in section 8.
+
+===== Decision Tables
+
+The executable decision tables defined here use the same notation as the decision tables defined in Clause 8. Their execution semantics is defined in clause 10.3.2.10.
+
+===== Boxed FEEL expression
+
+A *boxed FEEL expression* is any FEEL expression _e,_ as defined by the FEEL grammar (clause 10.3.1), in a table cell, as shown in Figure 10‑3:
+
+image:extracted-media/media/image86.wmf[image,width=55,height=49]
+
+[#_Toc87278842 .anchor]##*Figure 10‑3: Boxed FEEL expression*
+
+The meaning of a boxed expression containing _e_ is *FEEL(*_e,_ *s)*, where *s* is the scope. The scope includes the context derived from the containing DRD as described in 10.4, and any boxed contexts containing _e_.
+
+It is usually good practice to make _e_ relatively simple, and compose small boxed expressions into larger boxed expressions.
+
+===== Boxed Invocation
+
+The syntax for boxed invocation is described in clause 7.2.3. This syntax may be used to invoke any function (e.g., business knowledge model, FEEL built-in function, boxed function definition).
+
+The box labeled 'invoked business knowledge model' can be any boxed expression whose value is a function, as shown in Figure 10‑4 :
+
+.[#_Toc87278974 .anchor]##*Table 44: Examples of equivalence and conformance relations*
+[width="100%",cols="35%,7%,58%",]
+|===
+a|
+____
+*Name*
+____
+
+| |
+a|
+____
+function-valued expression
+____
+
+| |
+a|
+____
+parameter 1
+____
+
+a|
+____
+binding expression 1
+____
+
+|
+a|
+____
+parameter 2
+____
+
+a|
+____
+binding expression 2
+____
+
+|
+a|
+____
+…
+____
+
+| |
+a|
+____
+parameter _n_
+____
+
+a|
+____
+binding expression _n_
+____
+
+|
+|===
+
+[#_Toc87278843 .anchor]##*Figure 10‑4: Boxed invocation*
+
+The boxed syntax maps to the textual syntax defined by grammar rules 38, 39, 40, 41. Boxed invocation uses named parameters. Positional invocation can be achieved using a boxed expression containing a textual positional invocation.
+
+The boxed syntax requires at least one parameter. A parameterless function must be invoked using the textual syntax, e.g., as shown in Figure 10‑5.
+
+[#_Toc87278844 .anchor]##*Figure 10‑5: Parameterless function*
+
+Formally, the meaning of a boxed invocation is given by the semantics of the equivalent textual invocation, _e.g.,_ **function-valued expression(**parameter1**: binding expression1,** parameter2**: binding expression2, ...)**.
+
+===== Boxed Context
+
+A *boxed context* is a collection of _n_ (name, value) pairs with an optional result value. The names SHALL be distinct within a context. Each pair is called a context entry. Context entries may be separated by whitespace and connected with a line on the left (top). The intent is that all the entries of a context should be easily identified by looking down the left edge of a vertical context or across the top edge of a horizontal context. Cells SHALL be arranged in one of the following ways (see Figure 10‑6, Figure 10‑7):
+
+.[#_Toc87278975 .anchor]##*Table 45: Examples of singleton list conversions*
+[width="100%",cols="48%,52%",]
+|===
+a|
+____
+Name 1
+____
+
+a|
+____
+Value 1
+____
+
+| |
+a|
+____
+Name 2
+____
+
+a|
+____
+Value 2
+____
+
+a|
+____
+Name _n_
+____
+
+a|
+____
+Value _n_
+____
+
+a|
+____
+Result
+____
+
+|
+|===
+
+[#_Toc87278845 .anchor]##*Figure 10‑6: Vertical context*
+
+.[#_Toc87278976 .anchor]##*Table 46: Semantics of decision table*
+[width="100%",cols="25%,22%,22%,11%,20%",]
+|===
+a|
+____
+Name 1
+____
+
+a|
+____
+Name 2
+____
+
+a|
+____
+Name _n_
+____
+
+| a|
+____
+Result
+____
+
+a|
+____
+Value 1
+____
+
+a|
+____
+Value 2
+____
+
+a|
+____
+Value _n_
+____
+
+| |
+|===
+
+[#_Toc87278846 .anchor]##*Figure 10‑7: Horizontal context*
+
+The context entries in a context are often used to decompose a complex expression into simpler expressions, each with a name. These context entries may be thought of as intermediate results. For example, contexts without a final Result box are useful for representing case data (see Figure 10‑8).
+
+.[#_Toc87278977 .anchor]##*Table 47: Mapping between FEEL and other domains*
+[width="100%",cols="45%,13%,13%,29%",]
+|===
+a|
+____
+*Applicant Data*
+____
+
+| | |
+a|
+____
+Age
+____
+
+a|
+____
+51
+____
+
+| |
+a|
+____
+MaritalStatus
+____
+
+a|
+____
+"M"
+____
+
+| |
+a|
+____
+EmploymentStatus
+____
+
+a|
+____
+"EMPLOYED"
+____
+
+| |
+a|
+____
+ExistingCustomer
+____
+
+a|
+____
+false
+____
+
+| |
+a|
+____
+Monthly
+____
+
+a|
+____
+Income
+____
+
+| a|
+____
+10000.00
+____
+
+| a|
+____
+Repayments
+____
+
+| a|
+____
+2500.00
+____
+
+| a|
+____
+Expenses
+____
+
+| a|
+____
+3000.00
+____
+
+|===
+
+[#_Toc87278847 .anchor]##*Figure 10‑8: Use of context entries*
+
+Contexts with a final result box are useful for representing calculations (see Figure 10‑9).
+
+.[#_Toc87278978 .anchor]##*Table 48: Semantics of FEEL functions*
+[width="100%",cols="42%,7%,51%",]
+|===
+a|
+____
+*Eligibility*
+____
+
+| |
+a|
+____
+Age
+____
+
+a|
+____
+Applicant. Age
+____
+
+|
+a|
+____
+Monthly Income
+____
+
+a|
+____
+Applicant. Monthly. Income
+____
+
+|
+a|
+____
+Pre-Bureau Risk Category
+____
+
+a|
+____
+Affordability. Pre-Bureau Risk Category
+____
+
+|
+a|
+____
+Installment Affordable
+____
+
+a|
+____
+Affordability. Installment Affordable
+____
+
+|
+a|
+____
+if Pre-Bureau Risk Category = "DECLINE" or Installment Affordable = false or
+
+Age < 18 or
+
+Monthly Income < 100 then "INELIGIBLE"
+
+else "ELIGIBLE"
+____
+
+| |
+|===
+
+[#_Toc87278848 .anchor]##*Figure 10‑9: Use of final result box*
+
+When decision tables are (non-result) context entries, the output cell can be used to name the entry, thus saving space. Any format decision table can be used in a vertical context. A jagged right edge is allowed. Whitespace between context entries may be helpful. See Figure 10‑10.
+
+.[#_Toc87278979 .anchor]##*Table 49: Semantics of other FEEL expressions*
+[width="100%",cols="43%,18%,26%,13%",]
+|===
+a|
+____
+Name 1
+____
+
+a|
+____
+Value 1
+____
+
+| |
+| | | |
+| | a|
+____
+Name 2
+____
+
+|
+| | | |
+| | | |
+a|
+____
+Name _n_
+____
+
+a|
+____
+Value _n_
+____
+
+| |
+a|
+____
+Result
+____
+
+| | |
+|===
+
+[#_Toc87278849 .anchor]##*Figure 10‑10: Vertical context with decision table entry*
+
+The names SHALL be legal FEEL names. The values and optional result are boxed expressions.
+
+Boxed contexts may have a decision table as the result, and use the named context entries to compute the inputs, and give them names. For example (see Figure 10‑11):
+
+.[#_Toc87278980 .anchor]##*Table 50: Semantics of conjunction and disjunction*
+[width="100%",cols="13%,19%,4%,15%,4%,16%,29%",]
+|===
+a|
+____
+*Post-Bureau Risk Category*
+____
+
+| | | | | |
+| | | | | | |
+a|
+____
+Existing Customer
+____
+
+| | a|
+____
+Applicant. ExistingCustomer
+____
+
+| | |
+a|
+____
+Credit Score
+____
+
+| | a|
+____
+Report. CreditScore
+____
+
+| | |
+a|
+____
+Application Risk Score
+____
+
+| | a|
+____
+Affordability Model(Applicant, Product). Application Risk Score
+____
+
+| | |
+| | | | | | |
+a|
+____
+U
+____
+
+a|
+____
+Existing Customer
+____
+
+a|
+____
+Application Risk Score
+____
+
+| a|
+____
+Credit Score
+____
+
+| a|
+____
+Post-Bureau Risk Category
+____
+
+a|
+____
+1
+____
+
+a|
+____
+true
+____
+
+a|
+____
+<=120
+____
+
+| a|
+____
+<590
+____
+
+| a|
+____
+“HIGH”
+____
+
+a|
+____
+2
+____
+
+| | | a|
+____
+{empty}[590..610]
+____
+
+| a|
+____
+“MEDIUM”
+____
+
+a|
+____
+3
+____
+
+| | | a|
+____
+>610
+____
+
+| a|
+____
+“LOW”
+____
+
+a|
+____
+4
+____
+
+| a|
+____
+>120
+____
+
+| a|
+____
+<600
+____
+
+| a|
+____
+“HIGH”
+____
+
+a|
+____
+5
+____
+
+| | | a|
+____
+{empty}[600..625]
+____
+
+| a|
+____
+“MEDIUM”
+____
+
+a|
+____
+6
+____
+
+| | | a|
+____
+>625
+____
+
+| a|
+____
+“LOW”
+____
+
+a|
+____
+7
+____
+
+a|
+____
+false
+____
+
+a|
+____
+<=100
+____
+
+| a|
+____
+<580
+____
+
+| a|
+____
+“HIGH”
+____
+
+a|
+____
+8
+____
+
+| | | a|
+____
+{empty}[580..600]
+____
+
+| a|
+____
+“MEDIUM”
+____
+
+a|
+____
+9
+____
+
+| | | a|
+____
+>600
+____
+
+| a|
+____
+“LOW”
+____
+
+a|
+____
+10
+____
+
+| a|
+____
+>100
+____
+
+| a|
+____
+<590
+____
+
+| a|
+____
+“HIGH”
+____
+
+a|
+____
+11
+____
+
+| | | a|
+____
+{empty}[590..615]
+____
+
+| a|
+____
+“MEDIUM”
+____
+
+a|
+____
+12
+____
+
+| | | a|
+____
+>615
+____
+
+| a|
+____
+“LOW”
+____
+
+|===
+
+[#_Toc87278850 .anchor]##*Figure 10‑11: Use of boxed expressions with a decision table*
+
+Formally, the meaning of a boxed context is \{ “Name 1”: Value 1, “Name 2”: Value 2, ..., “Name _n”_: Value _n_ } if no Result is specified. Otherwise, the meaning is \{ “Name 1”: Value 1, “Name 2”: Value 2, ..., “Name _n”_: Value _n_, “result”: Result }.result. Recall that the bold face indicates elements in the FEEL Semantic Domain. The scope includes the context derived from the containing DRG as described in 10.4.
+
+Boxed context entries for contexts that do not have a result box are accessible outside the context (as QNs), subject to the scope rules defined in clause 10.3.2.11. Boxed context entries for contexts that have a result box are not accessible outside the context.
+
+===== Boxed List
+
+A *boxed list* is a list of _n_ items. Cells SHALL be arranged in one of the following ways (see Figure 10‑12, Figure 10‑13):
+
+image:extracted-media/media/image87.emf[image,width=147,height=123]
+
+[#_Toc87278851 .anchor]##*Figure 10‑12: Vertical list*
+
+[#_Toc87278852 .anchor]##*Figure 10‑13: Horizontal list*
+
+Line styles are normative. The items are boxed expressions. Formally, the meaning of a boxed list is just the meaning of the list, i.e., *[ Item 1, Item 2, ..., Item _n_ ]*. The scope includes the context derived from the containing DRG as described in 10.4.
+
+===== Relation
+
+A vertical list of homogeneous horizontal contexts (with no result cells) can be displayed with the names appearing just once at the top of the list, like a relational table, as shown in Figure 10‑14:
+
+.[#_Toc87278981 .anchor]##*Table 51: Semantics of negation*
+[width="100%",cols="32%,30%,38%",]
+|===
+|Name 1 |Name 2 a|
+____
+Name _n_
+____
+
+|Value 1a |Value 2a a|
+____
+Value __n__a
+____
+
+|Value 1b |Value 2b a|
+____
+Value __n__b
+____
+
+|Value 1__m__ |Value 2__m__ a|
+____
+Value _nm_
+____
+
+|===
+
+* +
+*[#_Toc87278853 .anchor]##*Figure 10‑14: Relation*
+
+===== Boxed Function
+
+A Boxed Function Definition is the notation for parameterized boxed expressions.
+
+The boxed expression associated with a Business Knowledge Model SHALL be a boxed function definition or a decision table whose input expressions are assumed to be the parameter names.
+
+A boxed function has 3 cells:
+
+____
+{empty}1. *Kind*, containing the initial letter of one of the following:
+____
+
+* {blank}
+* {blank}
+* {blank}
+
+**F**EEL**P**MML**J**ava The *Kind* box can be omitted for FEEL functions, including decision tables.
+
+[arabic, start=2]
+. {blank}
+. {blank}
+
+Parameters: 0 or more comma-separated names, in parenthesesBody: a boxed expression
+
+The 3 cells SHALL be arranged as shown in Figure 10‑15:
+
+.[#_Toc87278982 .anchor]##*Table 52: General semantics of equality and inequality*
+[width="100%",cols="14%,86%",]
+|===
+a|
+____
+K
+____
+
+a|
+____
+(Parameter1, Parameter2, …)
+____
+
+a|
+____
+Body
+____
+
+|
+|===
+
+[#_Toc87278854 .anchor]##*Figure 10‑15: Boxed function definition*
+
+For FEEL functions, denoted by *Kind* FEEL or by omission of *Kind*, the Body SHALL be a FEEL expression that references the parameters. For externally defined functions denoted by Kind Java, the Body SHALL be a context as described in 10.3.2.13.3 and the form of the mapping information SHALL be the _java_ form. For externally defined functions denoted by *Kind* PMML, the Body SHALL be a context as described in 10.3.2.13.3 and the form of the mapping information SHALL be the _pmml_ form.
+
+Formally, the meaning of a boxed function is just the meaning of the function, _i.e._, FEEL(_funcion(Parameter1, Parameter2, ...) Body_) if the *Kind* is FEEL, and FEEL(_funcion(Parameter1, Parameter2, ...) external Body_) otherwise. The scope includes the context derived from the containing DRG as described in 10.4.
+
+===== Boxed conditional
+
+Boxed conditional offers a visual representation of an *if* statement using three rows. The first one is labelled “if”; the second one is labelled “then” and the last one is labelled “else”. In the right part, another FEEL expression is expected. The expression in the “if” part MUST resolve to a boolean.
+
+image:extracted-media/media/image88.png[Table Description automatically generated,width=317,height=150]
+
+[#_Toc87278855 .anchor]##*Figure* *10‑16: Boxed conditional*
+
+image:extracted-media/media/image89.png[Table Description automatically generated,width=503,height=387]
+
+[#_Toc87278856 .anchor]##*Figure* *10‑17: Use of conditional expression with decision table and invocation*
+
+===== Boxed filter
+
+Boxed filter offers a visual representation of collection filtering. The top part is an expression that is the collection to be filtered. The bottom part, between the square brackets, holds the filter expression. The expression in the top part MUST resolve to a collection. The expression in the bottom part MUST resolve to a Boolean.
+
+image:extracted-media/media/image90.png[Table Description automatically generated,width=340,height=100]
+
+[#_Toc87278857 .anchor]##*Figure* *10‑18:* *Filter* *expression*
+
+Color is suggested but it is considered a good practice to have a different color for the square brackets, so the filtering expression is easier to see.
+
+image:extracted-media/media/image91.png[Table Description automatically generated,width=247,height=294]
+
+[#_Toc87278858 .anchor]##*Figure* *10‑19: Use of filter expression with a list expression*
+
+===== Boxed iterator
+
+Boxed iterator offers a visual representation of an iterator statement. There are three flavors to it: *for* loop and quantified expression *some* and *every*.
+
+For the *for* loop, the three rows are labelled “for”, “in” and “return”. The right part of the “for” displays the iterator variable name. The second row holds an expression representing the collection that will be iterated over. The expression in the in row MUST resolve to a collection. The last row contains the expression that will process each element of the collection.
+
+image:extracted-media/media/image92.png[image,width=317,height=148]
+
+[#_Toc87278859 .anchor]##*Figure* *10‑20: For expression*
+
+image:extracted-media/media/image93.png[Table Description automatically generated,width=625,height=193]
+
+[#_Toc87278860 .anchor]##*Figure* *10‑21: Use of for expression that returns a context*
+
+*Every* and *some* expression have a similar structure. The only difference between the two is the caption on the first line which is “every” or “some”. The second line is labelled “in” and the last one “satisfies”. The right part of the first line is the iterator variable name. The expression defined in the second row is the collection that will be tested. The expression in the in row MUST resolve to a collection. The last line is an expression that will be evaluated on each item. The expression defined in the satisfies MUST resolve to a boolean.
+
+image:extracted-media/media/image94.png[Table Description automatically generated,width=317,height=148]
+
+[#_Toc87278861 .anchor]##*Figure* *10‑22: Every expression*
+
+image:extracted-media/media/image95.png[Table Description automatically generated,width=317,height=390]
+
+[#_Toc87278862 .anchor]##*Figure* *10‑23: Use of every with a list expression*
+
+image:extracted-media/media/image96.png[Table Description automatically generated,width=317,height=148]
+
+[#_Toc87278863 .anchor]##*Figure* *10‑24: Some expression*
+
+image:extracted-media/media/image97.png[Table Description automatically generated with medium confidence,width=415,height=586]
+
+[#_Toc87278864 .anchor]##*Figure* *10‑25: Use of some with a relation and a decision table*
+
+====  FEEL
+
+A subset of FEEL, defined in the next section, serves as the notation "in the boxes" of boxed expressions. A FEEL object is a number, a string, a date, a time, a duration, a function, a context, or a list of FEEL objects (including nested lists).
+
+Note: A JSON object is a number, a string, a context (JSON calls them maps) or a list of JSON objects. So, FEEL is an extension of JSON in this regard. In addition, FEEL provides friendlier syntax for literal values, and does not require context keys to be quoted.
+
+Here we give a "feel" for the language by starting with some simple examples.
+
+===== Comparison of ranges
+
+Ranges and lists of ranges appear in decision table input entry, input value, and output value cells. In the examples in *Table _39_*, this portion of the syntax is shown underlined. Strings, dates, times, and durations also may be compared, using typographical literals defined in section 7.2.2.1.
+
+.[#_Toc87278983 .anchor]##*Table 53: Specific semantics of equality*
+[width="100%",cols="47%,53%",options="header",]
+|===
+|*FEEL Expression* |*Value*
+|5 in ([.underline]#<=5# ) |true
+|5 in ( ([.underline]#5..10#] ) |false
+|5 in ( [[.underline]#5..10#] ) |true
+|5 in ([.underline]#4, 5, 6#) |true
+|5 in (<5, >5) |false
+|*_2012-12-31_* in ( (*_[.underline]#2012-12-25..2013-02-14#_*) ) |true
+|===
+
+===== Numbers
+
+FEEL numbers and calculations are exemplified in *Table _40_*.
+
+.[#_Toc87278984 .anchor]##*Table 54: Specific semantics of inequality*
+[width="100%",cols="40%,60%",options="header",]
+|===
+|*FEEL Expression* |*Value*
+a|
+____
+decimal(1, 2)
+____
+
+a|
+____
+1.00
+____
+
+a|
+____
+.25 + .2
+____
+
+a|
+____
+0.45
+____
+
+a|
+____
+.10 * 30.00
+____
+
+a|
+____
+3.0000
+____
+
+a|
+____
+1 + 3/2*2 - 2**3
+____
+
+a|
+____
+-4.0
+____
+
+a|
+____
+1/3
+____
+
+a|
+____
+0.3333333333333333333333333333333333
+____
+
+a|
+____
+decimal(1/3, 2)
+____
+
+a|
+____
+0.33
+____
+
+a|
+____
+1 = 1.000
+____
+
+a|
+____
+true
+____
+
+a|
+____
+1.01/2
+____
+
+a|
+____
+0.505
+____
+
+a|
+____
+decimal(0.505, 2)
+____
+
+a|
+____
+0.50
+____
+
+a|
+____
+decimal(0.515, 2)
+____
+
+a|
+____
+0.52
+____
+
+a|
+____
+1.0*10**3
+____
+
+a|
+____
+1000.0
+____
+
+|===
+
+===  Full FEEL Syntax and Semantics
+
+Clause 9 introduced a subset of FEEL sufficient to support decision tables for Conformance Level 2 (see clause 2). The full *DMN* friendly-enough expression language (FEEL) required for Conformance Level 3 is specified here. FEEL is a simple language with inspiration drawn from Java, JavaScript, XPath, SQL, PMML, Lisp, and many others.
+
+The syntax is defined using grammar rules that show how complex expressions are composed of simpler expressions. Likewise, the semantic rules show how the meaning of a complex expression is composed from the meaning of constituent simper expressions.
+
+*DMN* completely defines the meaning of FEEL expressions that do not invoke externally-defined functions. There are no implementation-defined semantics. FEEL expressions (that do not invoke externally-defined functions) have no side- effects and have the same interpretation in every conformant implementation. Externally-defined functions SHOULD be deterministic and side-effect free.
+
+====  Syntax
+
+FEEL syntax is defined as grammar here and equivalently as a UML Class diagram in the meta-model (10.5)
+
+===== Grammar notation
+
+The grammar rules use the ISO EBNF notation. Each rule defines a non-terminal symbol _S_ in terms of some other symbols _S1, S2, ..._ The following table summarizes the EBNF notation.
+
+.[#_Toc87278985 .anchor]##*Table 55: Semantics of decision table syntax*
+[width="100%",cols="50%,50%",options="header",]
+|===
+a|
+____
+*Example*
+____
+
+a|
+____
+*Meaning*
+____
+
+a|
+____
+_S = S1 ;_
+____
+
+a|
+____
+Symbol _S_ is defined in terms of symbol _S1_
+____
+
+a|
+____
+_S1 | S2_
+____
+
+a|
+____
+Either _S1_ or _S2_
+____
+
+a|
+____
+_S1, S2_
+____
+
+a|
+____
+_S1_ followed by _S2_
+____
+
+a|
+____
+_[S1]_
+____
+
+a|
+____
+_S1_ occurring 0 or 1 time
+____
+
+a|
+____
+_\{S1}_
+____
+
+a|
+____
+_S1_ repeated 0 or more times
+____
+
+a|
+____
+_k * S1_
+____
+
+a|
+____
+_S1_ repeated k times
+____
+
+a|
+____
+"and"
+____
+
+a|
+____
+literal terminal symbol
+____
+
+|===
+
+We extend the ISO notation with character ranges for brevity, as follows:
+
+A character range has the following EBNF syntax:
+
+character range = "[", low character, "-", high character, "]" ;
+
+low character = unicode character ;
+
+high character = unicode character ;
+
+unicode character = simple character | code point ;
+
+code point = "\u", 4 * hexadecimal digit | "\U", 6 * hexadecimal digit;
+
+hexadecimal digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" |
+
+"a" | "A" | "b" | "B" | "c" | "C" | "d" | "D" | "e" | "E" | "f" | "F" ;
+
+A simple character is a single Unicode character, _e.g._ a, 1, $, _etc._ Alternatively, a character may be specified by its hexadecimal code point value, prefixed with _\u_.
+
+Every Unicode character has a numeric code point value. The low character in a range must have numeric value less than the numeric value of the high character.
+
+For example, hexadecimal digit can be described more succinctly using character ranges as follows:
+
+____
+hexadecimal digit = [0-9] | [a-i | [A-F] ;
+____
+
+Note that the character range that includes all Unicode characters is _[\u0-\u10FFFF]_.
+
+===== Grammar rules
+
+The complete FEEL grammar is specified below. Grammar rules are numbered, and in some cases alternatives are lettered, for later reference. Boxed expression syntax (rule 53) is used to give execution semantics to boxed expressions.
+
+____
+{empty}1. expression =
+____
+
+[loweralpha]
+. {blank}
+. {blank}
+
+____
+boxed expression |textual expression ;2. textual expression =
+____
+
+[loweralpha]
+. {blank}
+. {blank}
+. {blank}
+. {blank}
+. {blank}
+. {blank}
+. {blank}
+. {blank}
+
+____
+for expression | if expression | quantified expression |disjunction |conjunction |comparison |arithmetic expression |instance of |path expression | filter expression | function invocation |literal | simple positive unary test | name | "(" , expression , ")" ;3. textual expressions = textual expression , \{ "," , textual expression } ;
+
+{empty}4. arithmetic expression =
+____
+
+[loweralpha]
+. {blank}
+. {blank}
+. {blank}
+. {blank}
+
+____
+addition | subtraction |multiplication | division |exponentiation |arithmetic negation ;5. simple expression = arithmetic expression | simple value ;
+
+{empty}6. simple expressions = simple expression , \{ "," , simple expression } ;
+
+{empty}7. simple positive unary test =
+____
+
+[loweralpha]
+. {blank}
+. {blank}
+
+____
+( "<" | "<=" | ">" | ">=" ) , endpoint |interval ;8. interval = ( open interval start | closed interval start ) , endpoint , ".." , endpoint , ( open interval end | closed interval end ) ;
+
+{empty}9. open interval start = "(" | "]" ;
+
+{empty}10. closed interval start = "[" ;
+
+{empty}11. open interval end = ")" | "[" ;
+
+{empty}12. closed interval end = "]" ;
+
+{empty}13. positive unary test = expression ;
+
+{empty}14. positive unary tests = positive unary test , \{ "," , positive unary test } ;
+
+{empty}15. unary tests =
+____
+
+[loweralpha]
+. {blank}
+. {blank}
+. {blank}
+
+____
+positive unary tests |"not", " (", positive unary tests, ")" |"-"16. endpoint = expression ;
+
+{empty}17. simple value = qualified name | simple literal ;
+
+{empty}18. qualified name = name , \{ "." , name } ;
+
+{empty}19. addition = expression , "+" , expression ;
+
+{empty}20. subtraction = expression , "-" , expression ;
+
+{empty}21. multiplication = expression , "*" , expression ;
+
+{empty}22. division = expression , "/" , expression ;
+
+{empty}23. exponentiation = expression, "**", expression ;
+
+{empty}24. arithmetic negation = "-" , expression ;
+
+{empty}25. name = name start , \{ name part | additional name symbols } ;
+
+{empty}26. name start = name start char, \{ name part char } ;
+
+{empty}27. name part = name part char , \{ name part char } ;
+
+{empty}28. name start char = "?" | [A-Z] | "_" | [a-z] | [\uC0-\uD6] | [\uD8-\uF6] | [\uF8-\u2FF] | [\u370-\u37D] | [\u37F-\u1FFF] | [\u200C-\u200D] | [\u2070-\u21 8F] | [\u2C00-\u2FEF] | [\u3001 -\uD7FF] | [\uF900-\uFDCF] | [\uFDF0-\uFFFD] | [\u10000-\uEFFFF] ;
+
+{empty}29. name part char = name start char | digit | \uB7 | [\u0300-\u036F] | [\u203F-\u2040] ;
+
+{empty}30. additional name symbols = "." | "/" | "-" | "’" | "+" | "*" ;
+
+{empty}31. literal = simple literal | "null" ;
+
+{empty}32. simple literal = numeric literal | string literal | boolean literal | date time literal ;
+
+{empty}33. string literal = """, \{ character – (""" | vertical space) | string escape sequence}, """ ;
+
+{empty}34. boolean literal = "true" | "false" ;
+
+{empty}35. numeric literal = [ "-" ] , ( digits , [ ".", digits ] | "." , digits ) ;
+
+{empty}36. digit = [0-9] ;
+
+{empty}37. digits = digit , \{digit} ;
+
+{empty}38. function invocation = expression , parameters ;
+
+{empty}39. parameters = "(" , ( named parameters | positional parameters ) , ")" ;
+
+{empty}40. named parameters = parameter name , ":" , expression , \{ "," , parameter name , ":" , expression } ;
+
+{empty}41. parameter name = name ;
+
+{empty}42. positional parameters = [ expression , \{ "," , expression } ] ;
+
+{empty}43. path expression = expression , "." , name ;
+
+{empty}44. for expression = "for" , name , "in" , iteration context \{ "," , name , "in" , iteration context } , "return" , expression ;
+
+{empty}45. if expression = "if" , expression , "then" , expression , "else" expression ;
+
+{empty}46. quantified expression = ("some" | "every") , name , "in" , expression , \{ "," , name , "in" , expression } , "satisfies" ,
+
+expression ;
+
+{empty}47. disjunction = expression , "or" , expression ;
+
+{empty}48. conjunction = expression , "and" , expression ;
+
+{empty}49. comparison =
+____
+
+[loweralpha]
+. {blank}
+. {blank}
+. {blank}
+. {blank}
+
+____
+expression , ( "=" | "!=" | "<" | "<=" | ">" | ">=" ) , expression |expression , "between" , expression , "and" , expression |expression , "in" , positive unary test |expression , "in" , " (", positive unary tests, ")" ;50. filter expression = expression , "[" , expression , "]" ;
+
+{empty}51. instance of = expression , "instance" , "of" , type ;
+
+{empty}52. type =
+
+qualified name |
+
+"range" "<" type ">" |
+
+"list" "<" type ">" |
+
+"context" "<" name ":" type \{ "," name ":" type } ">" | "function" "<" [ type \{ ", " type } ] ">" "->" type
+
+;
+
+{empty}53. boxed expression = list | function definition | context ;
+
+{empty}54. list = "[" , [ expression , \{ "," , expression } ] , "]" ;
+
+{empty}55. function definition = "function" , "(" , [ formal parameter \{ "," , formal parameter } ] , ")" , [ "external" ] , expression ;
+
+{empty}56. formal parameter = parameter name [":" type ] ;
+
+{empty}57. context = "\{" , [context entry , \{ "," , context entry } ] , "}" ;
+
+{empty}58. context entry = key , ":" , expression ;
+
+{empty}59. key = name | string literal ;
+
+{empty}60. date time literal = at literal | function invocation;
+
+{empty}61. white space = vertical space | \u0009 | \u0020 | \u0085 | \u00A0 | \u1 680 | \u1 80E | [\u2000-\u200B] | \u2028 | \u2029 | \u202F | \u205F | \u3000 | \uFEFF ;
+
+{empty}62. vertical space = [\u000A-\u000D]
+
+{empty}63. iteration context = expression, [ “..”, expression ];
+
+{empty}64. string escape sequence = "\'" | "\"" | "\\" | "\n" | "\r" | "\t" | code point;
+
+{empty}65. at literal = “@”, string literal
+____
+
+Additional syntax rules:
+
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+
+===== Operator precedence is given by the order of the alternatives in grammar rules 1, 2 and 4, in order from lowest to highest. _E.g.,_ (boxed) invocation has higher precedence than multiplication, multiplication has higher precedence than addition, and addition has higher precedence than comparison. Addition and subtraction have equal precedence, and like all FEEL infix binary operators, are left associative.Java-style comments can be used, _i.e._ '//' to end of line and /* ... */.In rule 62, the only permitted functions are the builtins _date_, _time_, _date and time,_ and _duration_.The string in rule 65 must follow the date string, time string, date and time string or duration string syntax, as detailed in section 10.3.4.1. Literals, data types, built-in functions
+
+FEEL supports literal syntax for numbers, strings, booleans, date, time, date and time, duration, and _null_. (See grammar rules, clause 10.3.1.2). Literals can be mapped directly to values in the FEEL semantic domain (clause 10.3.2.1).
+
+FEEL supports the following datatypes:
+
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+
+===== NumberStringBooleandays and time durationyears and months durationdatetimedate and timelistrangecontextfunctionTokens, Names and White space
+
+A FEEL expression consists of a sequence of tokens, possibly separated with white space (grammar rule 63). A token is a sequence of Unicode characters, either:
+
+* {blank}
+* {blank}
+
+A literal terminal symbol in any grammar rule other than grammar rule 30. Literal terminal symbols are enclosed in double quotes in the grammar rules, e.g., “and”, “+”, “=”, orA sequence conforming to grammar rule 28, 29, 35, or 37For backward compatibility reasons, “list”, “context” and “range” from grammar rule 52 are not considered literal terminal symbols.
+
+White space (except inside strings) acts as token separators. Most grammar rules act on tokens, and thus ignore white space (which is not a token).
+
+A name (grammar rule 27) is defined as a sequence of tokens. I.e. the name IncomeTaxesAmount is defined as the list of tokens *[ Income, Taxes, Amount ]*. The name Income+Expenses is defined as the list of tokens *[ Income, + , Expenses ]*. A consequence of this is that a name like Phone Number with one space in between the tokens is the same as Phone Number with several spaces in between the tokens.
+
+A name start (grammar rule 26) SHALL NOT be a literal terminal symbol.
+
+A name part (grammar rule 27) MAY be a literal terminal symbol.
+
+===== Contexts, Lists, Qualified Names, and Context Lists
+
+A context is a map of key-value pairs called context entries, and is written using curly braces to delimit the context, commas to separate the entries, and a colon to separate key and value (grammar rule 57). The key can be a string or a name. The value is an expression.
+
+A list is written using square brackets to delimit the list, and commas to separate the list items (grammar rule 54).
+
+Contexts and lists can reference other contexts and lists, giving rise to a directed acyclic graph. Naming is path based. The _qualified name_ (QN) of a context entry is of the form _N1_._N2 ... N~n~_ where _N1_ is the name of an in-scope context.
+
+Nested lists encountered in the interpretation of _N1_._N2 ... N~n~_ are preserved. _E.g.,_
+
+[loweralpha]
+. {blank}
+. {blank}
+
+____
+_\{b: [1]}}, \{a: \{b: [2.1, 2.2]}}, \{a: \{b: [3]}}, \{a: \{b: [4, 5]}}].a.b =[1]}, \{b: [2.1,2.2]}, \{b: [3]}, \{b: [4, 5]}].b =[[1], [2.1, 2.2], [3], [4, 5]]_
+____
+
+Nested lists can be flattened using the _flatten()_ built-in function (10.3.4).
+
+===== Ambiguity
+
+FEEL expressions reference InformationItems by their qualified name (QN), in which name parts are separated by a period. For example, variables containing components are referenced as [varName].[componentName]. Imported elements such as InformationItems and ItemDefinitions are referenced by namespace-qualified name, in which the first name part is the name specified by the Import element importing the element. For example, an imported variable containing components is referenced as [import name].[varName].[componentName].
+
+Because names are a sequence of tokens, and some of those tokens can be FEEL operators and keywords, context is required to resolve ambiguity. For example, the following could be names or other expressions:
+
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+
+a-ba – bwhat if?Profit and lossAmbiguity is resolved using the scope. Name tokens are matched from left to right against the names in-scope, and the longest match is preferred. In the case where the longest match is not desired, parenthesis or other punctuation (that is not allowed in a name) can be used to disambiguate a FEEL expression. For example, to subtract b from a if a-b is the name of an in-scope context entry, one could write (a)-(b). Notice that it does not help to write a - b, using space to separate the tokens, because the space is not part of the token sequence and thus not part of the name.
+
+====  Semantics
+
+FEEL semantics is specified by mapping syntax -fragments to values in the FEEL semantic domain. Literals (clause 10.3.1.3) can be mapped directly. Expressions composed of literals are mapped to values in the semantic domain using simple logical and arithmetic operations on the mapped literal values. In general, the semantics of any FEEL expression are composed from the semantics of its sub-expressions.
+
+===== Semantic Domain
+
+The FEEL semantic domain *D* consists of an infinite number of typed values. The types are organized into a lattice called *L*.
+
+The types include:
+
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+
+simple datatypes such as number, boolean, string, date, time, and durationconstructed datatypes such as functions, lists, and contextsthe Null type, which includes only the *null* valuethe special type Any, which includes all values in **D**A function is a lambda expression with lexical closure or is externally defined by Java or PMML. A list is an ordered collection of domain elements, and a context is a partially ordered collection of (string, value) pairs called context entries.
+
+We use _italics_ to denote syntactic elements and *boldface* to denote semantic elements. For example, FEEL**(**_[1+ 1, 2+2]_*) is [2, 4]*
+
+Note that we use bold *[]* to denote a list in the FEEL semantic domain, and bold numbers *2, 4* to denote those decimal values in the FEEL semantic domain.
+
+===== Equality, Identity and Equivalence
+
+The semantics of equality are specified in the semantic mappings in clause 10.3.2.15. In general, the values to be compared must be of the same kind, for example, both numbers, to obtain a non-null result.
+
+Identity simply compares whether two objects in the semantic domain are the same object. We denote the test for identity using infix *is*, and its negation using infix *is not*. For example, FEEL( _"1" = 1_) *is null*. Note that *is* never results in *null*.
+
+Every FEEL expression _e_ in scope s can be mapped to an element *e* in the FEEL semantic domain. This mapping defines the meaning of _e_ in s. The mapping may be written *e is* FEEL(_e_,s). Two FEEL expressions _e~1~_ and _e~2~_ are equivalent in scope s if and only if FEEL(_e~1~_,s) *is* FEEL(_e~2~_,s). When s is understood from context (or not important), we may abbreviate the equivalence as *e~1~ is e~2~*.
+
+===== Semantics of literals and datatypes
+
+FEEL datatypes are described in the following sub-sections. The meaning of the datatypes includes:
+
+[arabic]
+. {blank}
+. {blank}
+
+A mapping from a literal form (which in some cases is a string) to a value in the semantic domain.A precise definition of the set of semantic domain values belonging to the datatype, and the operations on them. Each datatype describes a (possibly infinite) set of values. The sets for the datatypes defined below are disjoint. We use _italics_ to indicate a literal and *boldface* to indicate a value in the semantic domain.
+
+====== number
+
+FEEL Numbers are based on IEEE 754-2008 Decimal128 format, with 34 decimal digits of precision and rounding toward the nearest neighbor with ties favoring the even neighbor. Numbers are a restriction of the XML Schema type precisionDecimal, and are equivalent to Java BigDecimal with MathContext DECIMAL 128.
+
+Grammar rule 35 defines literal numbers. Literals consist of base 10 digits and an optional decimal point. –INF, +INF, and NaN literals are not supported. There is no distinction between -0 and 0. The number(from, grouping separator, decimal separator) built-in function supports a richer literal format. E.g., FEEL(number("1. 000.000,01 ", ". ", ",")) = *1000000.01*.
+
+FEEL does not support a literal scientific notation. E.g., 1 .2e3 is not valid FEEL syntax. Use _1.2*10**3_ instead.
+
+A FEEL number is represented in the semantic domain as a pair of integers *(p,s)* such that *p* is a signed 34 digit integer carrying the precision information, and *s* is the scale, in the range [−611 1..6176]. Each such pair represents the number *p*/10**^s^**. To indicate the numeric value, we write *value(p,s)*. _E.g._ *value(100,2) = 1.* If precision is not of concern, we may write the value as simply *1*. Note that many different pairs have the same value. For example, *value(1,0) = value(10,1) = value(100,2)*.
+
+There is no value for notANumber, positiveInfinity, or negativeInfinity. Use *null* instead.
+
+====== string
+
+Grammar rule 33 defines literal strings as a double-quoted sequence of Unicode characters (see https://unicode.org/glossary/#character),[[.underline]#https://unicode.org/glossary/#character)&#44;#] e.g., "abc". The supported Unicode character range is [\u0-\u10FFFF]. The string literals are described by rule 33. The corresponding Unicode code points are used to encode a string literal.
+
+image:extracted-media/media/image98.png[image,height=14]The literal string _"abc"_ is mapped to the semantic domain as a sequence of three Unicode characters *a*, *b*, and *c*, written *"abc"*. The literal _"\ U01F4 0E"_ is mapped to a sequence of one Unicode character written *"ὀ"* corresponding to the code point U+1F40E.
+
+====== boolean
+
+The Boolean literals are given by grammar rule 34. The values in the semantic domain are *true* and *false*.
+
+====== time
+
+Times in FEEL can be expressed using either a time literal (see grammar rule 65) or the _time()_ built-in function (See 10.3.4.1). We use boldface time literals to represent values in the semantic domain.
+
+A time in the semantic domain is a value of the XML Schema time datatype. It can be represented by a sequence of numbers for the hour, minute, second, and an optional time offset from Universal Coordinated Time (UTC). If a time offset is specified, including time offset = 00:00, the time value has a UTC form and is comparable to all time values that have UTC forms. If no time offset is specified, the time is interpreted as a local time of day at some location, whose relationship to UTC time is dependent on time zone rules for that location, and may vary from day to day. A local time of day value is only sometimes comparable to UTC time values, as described in XML Schema Part 2 Datatypes.
+
+____
+A time *t* can also be represented as the number of seconds since midnight. We write this as *valuet(t)*. _E.g.,_ *valuet(01:01:01) = 3661*.
+
+The *valuet* function is one-to-one, but its range is restricted to [0..86400]. So, it has an inverse function *valuet ^-1^*(x) that returns: the corresponding time value for x, if x is in [0..86400]; and *valuet ^-1^*(y), where y = x – floor(x/86400) * 86400, if x is not in [0..86400].
+
+Note: That is, *valuet ^-1^*(x) is always actually applied to x modulo 86400. For example, *valuet ^-1^*(3600) will return the time of day that is “01:00:00”, *valuet ^-1^*(90000) will also return “T01 :00:00”, and *valuet ^-1^*(-3600) will return the time of day that is “23 :00:00”, treating -3600 seconds as one hour _before_ midnight.
+____
+
+====== date
+
+Dates in FEEL can be expressed using either a date literal (see grammar rule 65) or the date() built-in function (See 10.3.4.1). A date in the semantic domain is a sequence of numbers for the year, month, day of the month. The year must be in the range [-999,999,999. .999,999,999]. We use boldface date literals to represent values in the semantic domain.
+
+Where necessary, including the value**_dt_** function (see 10.3.2.3.6), a date value is considered to be equivalent to a date time value in which the time of day is UTC midnight (00:00:00).
+
+====== date-time
+
+_Date and time_ in FEEL can be expressed using either a _date time literal_ (see grammar rule 65) or the _date and time()_ built-in function (See 10.3.2.3.6). We use boldface _date and time literals_ to represent values in the semantic domain.
+
+A date and time in the semantic domain is a sequence of numbers for the year, month, day, hour, minute, second, and optional time offset from Universal Coordinated Time (UTC). The year must be in the range [-999,999,999..999,999,999]. If there is an associated time offset, including 00:00, the date-time value has a UTC form and is comparable to all other date-time values that have UTC forms. If there is no associated time offset, the time is taken to be a local time of day at some location, according to the time zone rules for that location. When the time zone is specified, e.g., using the IANA tz form (see 10.3.4.1), the date-time value may be converted to a UTC form using the time zone rules for that location, if applicable.
+
+Note: projecting timezone rules into the future may only be safe for near-term date-time values.
+
+A date and time *d* that has a UTC form can be represented as a number of seconds since a reference date and time (called the epoch). We write *valuedt(d)* to represent the number of seconds between *d* and the epoch. The *valuedt* function is one- to-one and so it has an inverse function *valuedt ^-1^*. _E.g.,_ *valuedt^-1^(valuedt(d)) = d. valuedt ^-1^* returns *null* rather than a date with a year outside the legal range.
+
+====== days and time duration
+
+Days and time durations in FEEL can be expressed using either a duration literal (see grammar rule 65) or the duration() built-in function (See 10.3.4.1). We use boldface days and time duration literals to represent values in the semantic domain. The literal format of the characters within the quotes of the string literal is defined by the lexical space of the XPath Data Model dayTimeDuration datatype. A days and time duration in the semantic domain is a sequence of numbers for the days, hours, minutes, and seconds of duration, normalized such that the sum of these numbers is minimized. For example, FEEL(_duraion("P0DT25H")_) = *P1DT1H*.
+
+The value of a days and time duration can be expressed as a number of seconds. _E.g._, *valuedtd(P1DT1H) = 90000.* The *valuedtd* function is one-to-one and so it has an inverse function *valuedtd -1*. _E.g.,_ *valuedtd ^-1^(90000) = P1DT1H.*
+
+====== years and months duration
+
+Years and months durations in FEEL can be expressed using either a duration literal (see grammar rule 65) or the duration() built-in function (See 10.3.4.1). We use boldface years and month duration literals to represent values in the semantic domain. The literal format of the characters within the quotes of the string literal is defined by the lexical space of the XPath Data Model yearMonthDuration datatype. A years and months duration in the semantic domain is a pair of numbers for the years and months of duration, normalized such that the sum of these numbers is minimized. For example, FEEL(_duraion("P0Y13M")_) = *P1Y1M*.
+
+The value of a years and months duration can be expressed as a number of months. _E.g._, *value~ym~d(P1Y1M) = 13.* The *valueymd* function is one-to-one and so it has an inverse function *valueymd -1*. _E.g.,_ *valueymd ^-1^(13) = P1Y1M.*
+
+===== Ternary logic
+
+FEEL, like SQL and PMML, uses of ternary logic for truth values. This makes *and* and *or* complete functions from _*D* x *D* → *D*_. Ternary logic is used in Predictive Modeling Markup Language to model missing data values.
+
+===== Lists and filters
+
+Lists are immutable and may be nested. The _first_ element of a list _L_ can be accessed using _L[1]_ and the _last_ element can be accessed using _L[-1]_. The _n^th^_ element from the beginning can be accessed using _L[n],_ and the _n^th^_ element from the end can be accessed using _L[-n]_.
+
+If FEEL(_L_) = *L* is a list in the FEEL semantic domain, the first element is FEEL(_L[1]_) = *L[1]*. If *L* does not contain *n* items, then *L[n] is null*.
+
+*L* can be filtered with a Boolean expression in square brackets. The expression in square brackets can reference a list element using the name _item_, unless the list element is a context that contains the key *"item"*. If the list element is a context, then its context entries may be referenced within the filter expression without the _'item.'_ prefix. For example:
+
+____
+_[1, 2, 3, 4][item > 2] = [3, 4]_
+
+_[ \{x:1, y:2}, \{x:2, y:3} ][x=1] = [\{x:1, y:2}]_
+____
+
+The filter expression is evaluated for each item in list, and a list containing only items where the filter expression is *true* is returned. E.g:
+
+____
+{empty}[ \{x:1, y:2}, \{x:null, y:3} ][x < 2] = [\{x:1, y:2}]
+____
+
+The expression to be filtered is subject to implicit conversions (10.3.2.9.4) before the entire expression is evaluated.
+
+For convenience, a selection using the "." operator with a list of contexts on its left hand side returns a list of selections, _i.e._ FEEL(_e.f,_ *c*) = *[* FEEL(_f_, *c'*)*,* FEEL(_f_, *c"*)*, ... ]* where FEEL(_e_) = *[ e', e", ... ]* and *c'* is *c* augmented with the context entries of *e'*, *c"* is *c* augmented with the context entries of *e"*, etc. For example,
+
+____
+_[ \{x:1, y:2}, \{x:2, y:3} ].y = [2,3]_
+____
+
+===== Context
+
+A FEEL context is a partially ordered collection of (key, expression) pairs called context entries. In the syntax, keys can be either names or strings. Keys are mapped to strings in the semantic domain. These strings are distinct within a context. A context in the domain is denoted using bold FEEL syntax with string keys, _e.g._ *\{ "key1" : expr1, "key2" : expr2, ... }*.
+
+The syntax for selecting the value of the entry named _key1_ from context-valued expression _m_ is _m.key1._
+
+If _key1_ is not a legal name or for whatever reason one wishes to treat the key as a string, the following syntax is allowed: _get value(m, "key1 ")._ Selecting a value by key from context *m* in the semantic domain is denoted as *m.key1* or *get value(m, "key1")*
+
+To retrieve a list of key,value pairs from a context _m_, the following built-in function may be used__: get entries(m).__ For example, the following is true:
+
+____
+_get entries(\{key1: "value1 "})[key= "key1 "].value = "value1"_
+____
+
+An expression in a context entry may not reference the key of the same context entry, but may reference keys (as QNs) from previous context entries in the same context, as well as other values (as QNs) in scope.
+
+These references SHALL be acyclic and form a partial order. The expressions in a context SHALL be evaluated consistent with this partial order.
+
+===== Ranges
+
+FEEL supports a compact syntax for a range of values, useful in decision table test cells and elsewhere. Ranges can be syntactically represented either:
+
+[loweralpha]
+. {blank}
+. {blank}
+
+as a comparison operator and a single endpoint (grammar rule 7.a.)or a pair of endpoints and endpoint inclusivity flags that indicate whether one or both endpoints are included in the range (grammar rule 7.b.); on this case, endpoints must be of equivalent types (see section 10.3.2.9.1for the definition of type equivalence) and the endpoints must be ordered such that range start <= range end.Endpoints can be either a literal or a qualified name of the following types: number, string, date, time, date and time, or duration. The following are examples of valid ranges:
+
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+
+< 10>= date(“2019-03-31”)>= @”2019-03-31”<= duration(“PT01H”)<= @”PT01H”[ 5 .. 10 ]( birthday .. @”2019-01-01” ) Ranges are mapped into the semantic domain as a typed instance of the _range_ type. If the syntax with a single endpoint and an operator is used, then the other endpoint is undefined (represented by a null value) and the inclusivity flag is set to false. E.g.:
+
+[#_Toc87278972 .anchor]##*Table 42: Examples of range properties values*
+
+.[#_Toc87278986 .anchor]##*Table 56: General semantics of addition and subtraction*
+[width="100%",cols="22%,19%,20%,19%,20%",options="header",]
+|===
+a|
+____
+*range*
+____
+
+a|
+____
+*start included*
+____
+
+a|
+____
+*start*
+____
+
+a|
+____
+*end*
+____
+
+a|
+____
+*end included*
+____
+
+a|
+____
+{empty}[1..10]
+____
+
+a|
+____
+true
+____
+
+a|
+____
+1
+____
+
+a|
+____
+10
+____
+
+a|
+____
+true
+____
+
+a|
+____
+(1..10]
+____
+
+a|
+____
+false
+____
+
+a|
+____
+1
+____
+
+a|
+____
+10
+____
+
+a|
+____
+true
+____
+
+a|
+____
+<= 10
+____
+
+a|
+____
+false
+____
+
+a|
+____
+null
+____
+
+a|
+____
+10
+____
+
+a|
+____
+true
+____
+
+a|
+____
+> 1
+____
+
+a|
+____
+false
+____
+
+a|
+____
+1
+____
+
+a|
+____
+null
+____
+
+a|
+____
+false
+____
+
+|===
+
+===== Functions
+
+The FEEL function literal is given by grammar rule 55. Functions can also be specified in *DMN* via Function Definitions (see 6.3.9). The constructed type (__T__1, . . . , _Tn_) → _U_ contains the function values that take arguments of types _T1, . . . , Tn_ and yield results of type _U,_ regardless of the way the function syntax (e.g., FEEL literal or *DMN* Function Definition). In the case of exactly one argument type _T_ → _U_ is a shorthand for (_T_ ) → _U_.
+
+===== Relations between types
+
+Every FEEL expression executed in a certain context has a value in *D*, and every value has a type. The FEEL types are organized as a lattice (see Figure 10‑26), with upper type _Any_ and lower type _Null_. The lattice determines the conformance of the different types to each other. For example, because comparison is defined only between values with conforming types, you cannot compare a number with a boolean or a string.
+
+We define *type(*_e_*)* as the type of the domain element *FEEL(*_e,_ *c),* where _e_ is an expression defined by grammar rule 1. Literals for numbers, strings, booleans, null, date, time, date and time and duration literals are mapped to the corresponding node in lattice *L*. Complex expression such as list, contexts and functions are mapped to the corresponding parameterized nodes in lattice *L*. . For example, see *Table _43_*.
+
+.[#_Toc87278987 .anchor]##*Table 57: Specific semantics of addition and subtraction*
+[width="100%",cols="50%,50%",options="header",]
+|===
+a|
+____
+_e_
+____
+
+a|
+____
+*type(*_e_*)*
+____
+
+a|
+____
+_123_
+____
+
+a|
+____
+number
+____
+
+a|
+____
+_true_
+____
+
+a|
+____
+boolean
+____
+
+a|
+____
+_"abc"_
+____
+
+a|
+____
+string
+____
+
+a|
+____
+_date("2017-01-01 ")_
+____
+
+a|
+____
+date
+____
+
+a|
+____
+_["a", "b", "c"]_
+____
+
+a|
+____
+list<string>
+____
+
+a|
+____
+_["a", true, 123]_
+____
+
+a|
+____
+list<Any>
+____
+
+a|
+____
+[1..10)
+____
+
+a|
+____
+range<number>
+____
+
+a|
+____
+>= @”201 9-01-01”
+____
+
+a|
+____
+range<date>
+____
+
+a|
+____
+e
+____
+
+a|
+____
+type(e)
+____
+
+a|
+____
+\{"name": "Peter", age: 30}
+____
+
+a|
+____
+context<”age”: number, “name”:string>
+____
+
+a|
+____
+function f(x: number, y: number) x + y
+____
+
+a|
+____
+(number, number) → number
+____
+
+a|
+____
+DecisionA
+
+where the typeRef of DecisionA is <itemDefinition name="Employee">
+
+<itemComponent name="id">
+
+<typeRef>number</typeRef>
+
+</itemComponent>
+
+<itemComponentname="name"> <typeRef>string</typeRef> </itemComponent>
+
+</itemDefinition>
+____
+
+a|
+____
+context<”id”:number, “name”:string>
+____
+
+a|
+____
+BkmA
+
+where the encapsulated logic is <encapsulatedLogic>
+
+<formalParameter name="x" typeRef=" number" />
+
+<formalParameter name="y" typeRef=" number" />
+
+<literalExpression typeRef="number"> <text>x + y</text>
+
+</literalExpression>
+
+</encapsulatedLogic>
+____
+
+a|
+____
+(number, number) → number
+____
+
+|===
+
+A type expression _e_ defined by grammar rule 54 is mapped to the nodes in the lattice *L* by function *type(*_e_*)* as follows: primitive data type names are mapped to the node with the same name (e.g. _string_ is mapped the *string* node)
+
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+
+_Any_ is mapped to the node *Any*_Null_ is mapped to the node *Null*_list< T>_ is mapped to the *list* node with the parameter *type(*_T_*)*_context(k1:T1, ..., k~n~:T~n~> where n≥1_ is mapped to the *context* node with parameters k1: *type(*_T1_*)*, ..., k~n~: *type(*_T~n~_*)*_function< T1, ... T~n~> -> T_ is mapped to the *function* node with signature *type(*_T1_*)*, ..., *type(*_T~n~_*)* -> *type(*_T_**)**Type names defined in the _itemDefinitions_ section are mapped similarly to the context types (see rule above).If none of the above rules can be applied (e.g. type name does not exist in the decision model) the type expression is semantically incorrect.We define two relations between types:
+
+* {blank}
+* {blank}
+
+====== Equivalence (T ≡ S): Types T and S are interchangeable in all contexts.Conformance (T <:S): An instance of type T can be substituted at each place where an instance of type S is expected.Type Equivalence
+
+The equivalence relationship (≡) between types is defined as follows:
+
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+
+Primitive datatypes are equivalent to themselves, e.g., string ≡ string.Two list types _list< T>_ and _list<S>_ are equivalent iff _T_ is equivalent to _S_. For example, the types of [“a”, “b”] and [“c”] are equivalent.Two context types _context<k~1~: T~1~, ..., k~n~: T~n~>_ and _context<l~1~: S ~1~, ..., l~m~: S~m~>_ are equivalent iff n = m and for every _k~i~ :T~i~_ there is a unique _l~j~ :S~j~_ such that _k~i~ = l~j~_ and _T~i~_ ≡ _S~j~_ for i = 1, n. Context types are the types defined via ItemDefinitions or the types associated to FEEL context literals such as \{ “name”: “John”, “age”: 25}.Two function types (_T~1~, ..., T~n~) →U_ and (_S~1~, ..., S~m~) →V_ are equivalent iff n = m, _T~i~_ ≡ _S~j~_ for i = 1, n and _U_ ≡ _V_.Two range types _range< T>_ and _range<S>_ are equivalent iff _T_ is equivalent to _S_. For example, the types of [1..10] and [30..40] are equivalent.Type equivalence is transitive: if _type1_ is equivalent to _type2_, and _type2 is equivalent to type3_, then _type1_ is equivalent to _type3_.
+
+====== Type Conformance
+
+The conformance relation (<:) is defined as follows:
+
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+
+Conformance includes equivalence. If _T_ ≡ _S_ then _T_ <: __S__For every type _T_, _Null_ <: _T_ <: _Any,_ where _Null_ is the lower type in the lattice and _Any_ the upper type in the lattice.The list type _list< T>_ conforms to _list<S>_ iff _T_ conforms to __S.__The context type _context<k~1~: T~1~, ..., k~n~: T~n~>_ conforms to _context<l~1~: S ~1~, ..., l~m~: S~m~>_ iff n ≥ m and for every _li : S~i~_ there is a unique _~kj:Tj~_ such that _l~i~ = k~j~_ and _T~j~_ <: _S~i~_ for i = 1, mThe function type (_T~1~, ..., T~n~) →U_ conforms to type (_S~1~, ..., S~m~) →V_ iff n = m, _S~i~_ <: _T~i~_ for i = 1, n and _U_ <: _V_. The FEEL functions follow the “contravariant function argument type” and “covariant function return type” principles to provide type safety.The range type _range< T>_ conforms to _range< S>_ iff T conforms to S. Type conformance is transitive: if _type1_ conforms to _type2_, and _type2_ conforms to _type3_ , then _type1_ conforms to _type3_.
+
+____
+image:extracted-media/media/image99.png[image,width=644,height=386]
+____
+
+[#_Toc87278865 .anchor]##*Figure 10‑26: FEEL lattice type*
+
+====== Examples
+
+Let us consider the following ItemDefinitions:
+
+____
+<itemDefinition name="Employee1"> <itemComponent name="id">
+
+<typeRef>number</typeRef> </itemComponent>
+
+<itemComponent name="name"> <typeRef>string</typeRef> </itemComponent>
+
+</itemDefinition>
+
+<itemDefinition name="Employee2"> <itemComponent name="name">
+
+<typeRef>string</typeRef> </itemComponent>
+
+<itemComponent name="id">
+
+<typeRef>number</typeRef>
+
+</itemComponent> </itemDefinition>
+
+<itemDefinition name="Employee3"> <itemComponent name="id">
+
+<typeRef>number</typeRef> </itemComponent>
+
+<itemComponent name="name"> <typeRef>string</typeRef> </itemComponent>
+
+<itemComponent name="age">
+
+<typeRef>number</typeRef> </itemComponent>
+
+</itemDefinition>
+
+<itemDefinition isCollection=”true” name="Employee3List">
+
+<itemComponent name="id">
+
+<typeRef>number</typeRef> </itemComponent>
+
+<itemComponent name="name"> <typeRef>string</typeRef> </itemComponent>
+
+<itemComponent name="age">
+
+<typeRef>number</typeRef> </itemComponent>
+
+</itemDefinition>
+
+and the decisions _Decision1_ , _Decision2, Decision3 and Decision4_ with corresponding _typeRefs Employee1_ , _Employee2,_
+
+_Employee3_ and _Employee3List_.
+
+*Table _44_* provides examples for _equivalence to_ and _conforms to_ relations.
+____
+
+.[#_Toc87278988 .anchor]##*Table 58: General semantics of multiplication and division*
+[width="100%",cols="27%,24%,24%,25%",options="header",]
+|===
+a|
+____
+*type1*
+____
+
+a|
+____
+*type2*
+____
+
+a|
+____
+*equivalent to*
+____
+
+a|
+____
+*conforms to*
+____
+
+a|
+____
+number
+____
+
+a|
+____
+number
+____
+
+a|
+____
+True
+____
+
+a|
+____
+True
+____
+
+a|
+____
+string
+____
+
+a|
+____
+string
+____
+
+a|
+____
+True
+____
+
+a|
+____
+True
+____
+
+a|
+____
+string
+____
+
+a|
+____
+date
+____
+
+a|
+____
+False
+____
+
+a|
+____
+False
+____
+
+| | | |
+a|
+____
+date
+____
+
+a|
+____
+date and time
+____
+
+a|
+____
+False
+____
+
+a|
+____
+False
+____
+
+a|
+____
+*type(*_Decision 1_*)*
+____
+
+a|
+____
+*type(*_Decision2_*)*
+____
+
+a|
+____
+True
+____
+
+a|
+____
+True
+____
+
+a|
+____
+*type(*_Decision1_*)*
+____
+
+a|
+____
+*type(*_Decision3_*)*
+____
+
+a|
+____
+False
+____
+
+a|
+____
+False
+____
+
+a|
+____
+*type(*_Decision3_*)*
+____
+
+a|
+____
+*type(*_Decision1_*)*
+____
+
+a|
+____
+False
+____
+
+a|
+____
+True
+____
+
+a|
+____
+*type(*_Decision 1_*)*
+____
+
+a|
+____
+*type(*_\{"id": 1, "name " :"Peter"}_*)*
+____
+
+a|
+____
+True
+____
+
+a|
+____
+True
+____
+
+a|
+____
+*type(*_\{"id": 1, "name " :"Peter"}_*)*
+____
+
+a|
+____
+*type(*_Decision3_*)*
+____
+
+a|
+____
+False
+____
+
+a|
+____
+False
+____
+
+a|
+____
+*type(*_\{"id": 1, "name":"Peter", "age": 45}_*)*
+____
+
+a|
+____
+*type(*_Decision1_*)*
+____
+
+a|
+____
+False
+____
+
+a|
+____
+True
+____
+
+a|
+____
+*type(*_\{"id": 1, "name":"Peter", "age": 45}_*)*
+____
+
+a|
+____
+*type(*_Decision3_*)*
+____
+
+a|
+____
+True
+____
+
+a|
+____
+True
+____
+
+a|
+____
+*type*_([1, 2, 3]*)*_
+____
+
+a|
+____
+*type*_(["1 ", "2", "3"]*)*_
+____
+
+a|
+____
+False
+____
+
+a|
+____
+False
+____
+
+a|
+____
+*type*_([1, 2, 3]*)*_
+____
+
+a|
+____
+*type(*_Decision3_*)*
+____
+
+a|
+____
+False
+____
+
+a|
+____
+False
+____
+
+a|
+____
+*type(*_[\{"id": 1, "name":"Peter", "age": 45}]_*)*
+____
+
+a|
+____
+*type(*_Decision4_*)*
+____
+
+a|
+____
+True
+____
+
+a|
+____
+True
+____
+
+a|
+____
+*type(*_Decision4_*)*
+____
+
+a|
+____
+*type(*_Decision3_*)*
+____
+
+a|
+____
+False
+____
+
+a|
+____
+False
+____
+
+a|
+____
+*type(*_function(x:Employee 1 ) →Employee1_*)*
+____
+
+a|
+____
+*type(*_function(x:Employee 1 ) →Employee1_*)*
+____
+
+a|
+____
+True
+____
+
+a|
+____
+True
+____
+
+a|
+____
+*type(*_function(x:Employee 1 ) →Employee1_*)*
+____
+
+a|
+____
+*type(*_function(x:Employee 1 ) →Employee2_*)*
+____
+
+a|
+____
+True
+____
+
+a|
+____
+True
+____
+
+a|
+____
+*type(*_function(x:Employee 1 ) →Employee3_*)*
+____
+
+a|
+____
+*type(*_function(x:Employee 1 ) →Employee1_*)*
+____
+
+a|
+____
+False
+____
+
+a|
+____
+True
+____
+
+a|
+____
+*type(*_function(x:Employee 1 ) →Employee1_*)*
+____
+
+a|
+____
+*type(*_function(x:Employee 1 ) →Employee1_*)*
+____
+
+a|
+____
+False
+____
+
+a|
+____
+False
+____
+
+a|
+____
+*type(* [1..10] *)*
+____
+
+a|
+____
+*type(* (20..100) *)*
+____
+
+a|
+____
+True
+____
+
+a|
+____
+True
+____
+
+a|
+____
+*type1*
+____
+
+a|
+____
+*type2*
+____
+
+a|
+____
+equivalent to
+____
+
+a|
+____
+conforms to
+____
+
+a|
+____
+*type( [1..10] )*
+____
+
+a|
+____
+*type( [“a”..”x”] )*
+____
+
+a|
+____
+False
+____
+
+a|
+____
+False
+____
+
+|===
+
+====== Type conversions
+
+The type of a FEEL expression _e_ is determined from the value *e* = FEEL(_e_, *_s_*) in the semantic domain, where *_s_* is a set of variable bindings (see 10.3.2.11and 10.3.2.12). When an expression appears in a certain context it must be compatible with a type expected in that context, called the _target type_. After the type of the expression is deduced, an implicit conversion from the type of the expression to the target type can be performed sometimes. If an implicit conversion is mandatory but it cannot be performed the result is *null*.
+
+There are several possible type conversions:
+
+____
+- _to singleton list_:
+
+When the type of the expression is T and the target type is List<T> the expression is converted to a singleton list.
+____
+
+- _from singleton list_:
+
+____
+When the type of the expression is List<T>, the value of the expression is a singleton list and the target type is T, the expression is converted by unwraping the first element.
+
+- _conforms to:_
+
+When the type of the expression is T~1~, the target type is T~2~, and T~1~ conforms to T~2~ the value of expression remains unchanged. Otherwise the result is *null*.
+____
+
+There are several kinds of contexts in which implicit conversions may occur:
+
+____
+- Filter context (10.3.2.5) in which a filter expression is present. The expression to be filtered is subject to implicit conversion _to singleton list_.
+
+- Invocation context (*Table _63_*) in which an argument is bound to a formal parameter of a function. The arguments are subject to implicit conversion _from singleton list_.
+
+- Binding contexts in which the value of an expression is bound to a variable with associated type information (e.g. binding actual parameters to formal parameters in an invocation, or binding the result of a decision’s logic to the decision’s output variable). The expression is subject to _conforms to_ conversion.
+____
+
+=======  Examples
+
+The table below contains several examples for singleton list conversions.
+
+.[#_Toc87278989 .anchor]##*Table 59: Specific semantics of multiplication and division*
+[width="100%",cols="34%,33%,33%",options="header",]
+|===
+a|
+____
+*Expression*
+____
+
+a|
+____
+*Conversion*
+____
+
+a|
+____
+*Result*
+____
+
+a|
+____
+_3[item > 2]_
+____
+
+a|
+____
+_3_ is converted to _[3]_ as this a filter context, and an _to singleton list_ is applied
+____
+
+a|
+____
+*[3]*
+____
+
+a|
+____
+_contains(["foobar"], "of")_
+____
+
+a|
+____
+_["foobar"]_ is converted to _"foobar"_, as this is an invocation context and _from singleton list_ is applied
+____
+
+a|
+____
+*false*
+____
+
+|===
+
+In the example below, before binding variable _decision_003_ to value _"123"_ the conversion to the target type (number) fails, hence the variable is bound to _null_.
+
+____
+<**decision name="decision_003" id="_decision_003"**> <**variable name="decision_003"** *typeRef="number"/>* <**literalExpression**>
+
+<**text**>”_”123_”</**text**>
+
+</**literalExpression**>
+
+</**decision**>
+____
+
+===== Decision Table
+
+The normative notation for decision tables is specified in Clause 8. Each input expression SHALL be a textual expression (grammar rule 2). Each list of input values SHALL be an instance of unary tests (grammar rule 15). The value that is tested is the value of the input expression of the containing InputClause. Each list of output values SHALL be an instance of unary tests (grammar rule 15). The value that is tested is the value of a selected output entry of the containing OutputClause. Each input entry SHALL be an instance of unary tests (grammar rule 15). Rule annotations are ignored in the execution semantics.
+
+The decision table components are shown in Figure 8‑5: Rules as rows – schematic layout, and also correspond to the metamodel in clause 8.3 For convenience, Figure 8‑5 is reproduced here.
+
+.[#_Toc87278990 .anchor]##*Table 60: Semantics of exponentiation*
+[width="100%",cols="10%,30%,32%,28%",]
+|===
+a|
+____
+*information item n**ame*
+____
+
+| | |
+a|
+____
+H
+____
+
+a|
+____
+input expression 1
+____
+
+a|
+____
+input expression 2
+____
+
+a|
+____
+Output label
+____
+
+| a|
+____
+input value 1a,
+
+input value 1b
+____
+
+a|
+____
+input value 2a,
+
+input value 2b
+____
+
+a|
+____
+output value 1a,
+
+output value 1b
+____
+
+a|
+____
+1
+____
+
+a|
+____
+input entry 1.1
+____
+
+a|
+____
+input entry 2.1
+____
+
+a|
+____
+output entry 1.1
+____
+
+a|
+____
+2
+____
+
+| a|
+____
+input entry 2.2
+____
+
+a|
+____
+output entry 1.2
+____
+
+a|
+____
+3
+____
+
+a|
+____
+input entry 1.2
+____
+
+a|
+____
+-
+____
+
+a|
+____
+output entry 1.3
+____
+
+|===
+
+The semantics of a decision table is specified by first composing its literal expressions and unary tests into Boolean expressions that are mapped to the semantic domain, and composed into rule matches then rule hits. Finally, some of the decision table output expressions are mapped to the semantic domain and comprise the result of the decision table interpretation. Decision table components are detailed in *Table _46_*.
+
+.[#_Toc87278991 .anchor]##*Table 61: Semantics of type-checking*
+[width="100%",cols="50%,50%",options="header",]
+|===
+a|
+____
+*Component name (* means optional)*
+____
+
+a|
+____
+*Description*
+____
+
+a|
+____
+input expression
+____
+
+a|
+____
+One of the N>=0 input expressions, each a literal expression
+____
+
+a|
+____
+input values*
+____
+
+a|
+____
+One of the N input values, corresponding to the N input expressions. Each is a unary tests literal (see below).
+____
+
+a|
+____
+output values*
+____
+
+a|
+____
+A unary tests literal for the output.
+
+(In the event of M>1 output components (see Figure 8‑12), each output component may have its own output values)
+____
+
+a|
+____
+rules
+____
+
+a|
+____
+a list of R>0 rules. A rule is a list of N input entries followed by M output entries. An input entry is a unary tests literal. An output entry is a literal expression.
+____
+
+a|
+____
+hit policy*
+____
+
+a|
+____
+one of: "U", "A", “P”, “F”, "R", "O", "C", "C+", "C#", "C<", “C>” (default is "U")
+____
+
+a|
+____
+default output value*
+____
+
+a|
+____
+The default output value is one of the output values. If M>1, then default output value is a context with entries composed of output component names and output values.
+____
+
+|===
+
+Unary tests (grammar rule 15) are used to represent both input values and input entries. An input expression _e_ is said to _satisfy_ an input entry _t_ (with optional input values _v_), depending on the syntax of _t_, as follows:
+
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+
+grammar rule 1 5.a: FEEL(_e in (t)_)**=true**grammar rule 1 5.b: FEEL(_e in (t)_)**=false**grammar rule 1 5.c when _v_ is not provided: **e != null**grammar rule 1 5.c when _v_ is provided: FEEL(_e in (v)_)**=true**A rule with input entries _t1,t2,...,tN_ is said to _match_ the input expression list _[e1,e2,...,eN]_ (with optional input values list _[v1,v2, ...vN]_) if _ei satisfies ti_ (with optional input values _vi_) for all _i_ in 1 ..N.
+
+A rule is _hit_ if it is matched and the hit policy indicates that the matched rule's output value should be included in the decision table result. Each hit results in one output value (multiple outputs are collected into a single context value). Therefore, multiple hits require aggregation.
+
+The hit policy is specified using the initial letter of one of the following boldface policy names.
+
+Single hit policies:
+
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+
+*Unique* – only a single rule can be matched.*Any* – multiple rules can match, but they all have the same output,*Priority* – multiple rules can match, with different outputs. The output that comes first in the supplied _output values_ list is returned,*First* – return the first match in rule order,Multiple hit policies:
+
+* {blank}
+* {blank}
+* {blank}
+
+*Collect* – return a list of the outputs in arbitrary order,*Rule order* – return a list of outputs in rule order,*Output order* – return a list of outputs in the order of the _output values_ list The Collect policy may optionally specify an _aggregation_, as follows:
+
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+
+*C+* – return the sum of the outputs**C#** – return the count of the outputs**C<** – return the minimum-valued output *C>* – return the maximum-valued outputThe _aggregation_ is defined using the following built-in functions specified in clause 10.3.4.4: _sum, count, minimum, maximum_. To reduce complexity, decision tables with compound outputs do not support aggregation and support only the following hit policies: _Unique_, _Any_, _Priority, First_, _Collect without operator_, and _Rule order_.
+
+A decision table may have no rule hit for a set of input values. In this case, the result is given by the default output value, or *null* if no default output value is specified. A complete decision table SHALL NOT specify a default output value.
+
+____
+The semantics of a decision table invocation *DTI* are as follows:
+
+{empty}1. Every rule in the rule list is matched with the input expression list. Matching is unordered.
+
+{empty}2. If no rules match,
+____
+
+[loweralpha]
+. {blank}
+. {blank}
+
+____
+if a default output value _d_ is specified, **DTI=**FEEL(_d_)else *DTI=null*.3. Else let _m_ be the sublist of rules that match the input expression list. If the hit policy is "First" or "Rule order", order _m_ by rule number.
+____
+
+[loweralpha]
+. {blank}
+. {blank}
+. {blank}
+
+===== Let _o_ be a list of output expressions, where the expression at index _i_ is the output expression from rule _m[i]_. The output expression of a rule in a single output decision table is simply the rule's output entry. The output expression of a multiple output decision table is a context with entries composed from the output names and the rule's corresponding output entries. If the hit policy is "Output order", the decision table SHALL be single output and _o_ is ordered consistent with the order of the _output values_. Rule annotations are ignored for purposes of determining the expression value of a decision table.If a multiple hit policy is specified, DTI=FEEL(aggregation(o)), where aggregation is one of the built-in functions _sum, count, minimum_ as specified in clause 10.3.4.4.else **DTI=**FEEL(_o[1]_).Scope and context stack
+
+A FEEL expression _e_ is always evaluated in a well-defined set of name bindings that are used to resolve QNs in _e_. This set of name bindings is called the scope of _e_. Scope is modeled as a list of contexts. A scope *s* contains the contexts with entries that are in scope for _e_. The last context in *s* is the _built-in_ context. Next to last in *s* is the _global_ context. The first context in *s* is the context immediately containing _e_ (if any). Next are enclosing contexts of _e_ (if any).
+
+The QN of _e_ is the QN of the first context in *s* appended with .N, where N is the name of entry in the first context of *s* containing _e._ QNs in _e_ are resolved by looking through the contexts in *s* from first to last.
+
+====== Local context
+
+If _e_ denotes the value of a context entry of context *m*, then *m* is the local context for _e_, and *m* is the first element of *s.* Otherwise, _e_ has no local context and the first element of *s* is the global context, or in some cases explained later, the first element of *s* is a special context.
+
+All of the entries of *m* are in-scope for _e_, but the _depends on_ graph SHALL be acyclic. This provides a simple solution to the problem of the confusing definition above: if *m* is the result of evaluating the context expression _m_ that contains _e_, how can we know it in order to evaluate _e_? Simply evaluate the context entries in _depends on_ order.
+
+====== Global context
+
+The global context is a context created before the evaluation of _e_ and contains names and values for the variables defined outside expression _e_ that are accessible in _e_. For example, when _e_ is the body of a decision _D_, the global context contains entries for the information requirements and knowledge requirements of _D_ (_i.e.,_ names and logic of the business knowledge models, decisions and decision services required by _D)_.
+
+====== Built-in context
+
+The built-in context contains all the built-in functions.
+
+======  Special context
+
+Some FEEL expressions are interpreted in a _special_ context that is pushed on the front of *s*. For example, a filter expression is repeatedly executed with special first context containing the name 'item' bound to successive list elements. A function is executed with a special first context containing argument name->value mappings.
+
+Qualified names (QNs) in FEEL expressions are interpreted relative to *s*. The meaning of a FEEL expression _e_ in scope *s* is denoted as *FEEL(*_e,_ *s)*. We can also say that _e_ evaluates to *e* in scope *s*, or *e* = *FEEL(*_e,_ *s)*. Note that *e* and *s* are elements of the FEEL domain. *s* is a list of contexts.
+
+===== Mapping between FEEL and other domains
+
+A FEEL expression _e_ denotes a value *e* in the semantic domain. Some kinds of values can be passed between FEEL and external Java methods, between FEEL and external PMML models, and between FEEL and XML, as summarized in *Table _47_*. An empty cell means that no mapping is defined.
+
+.[#_Toc87278992 .anchor]##*Table 62: Semantics of negative numbers*
+[width="100%",cols="20%,26%,22%,32%",options="header",]
+|===
+a|
+____
+*_FEEL value_*
+____
+
+a|
+____
+*_Java_*
+____
+
+a|
+____
+*_XML_*
+____
+
+a|
+____
+*_PMML_*
+____
+
+a|
+____
+number
+____
+
+a|
+____
+java.math.BigDecimal
+____
+
+a|
+____
+decimal
+____
+
+|decimal, PROB-NUMBER, +
+PERCENTAGE-NUMBER
+| | a|
+____
+integer
+____
+
+a|
+____
+integer , INT-NUMBER
+____
+
+| | a|
+____
+double
+____
+
+a|
+____
+double, REAL-NUMBER
+____
+
+a|
+____
+string
+____
+
+a|
+____
+java.lang.String
+____
+
+a|
+____
+string
+____
+
+a|
+____
+string, FIELD-NAME
+____
+
+a|
+____
+date, time, date and time
+____
+
+a|
+____
+javax.xml.datatype. XMLGregorianCalendar
+____
+
+a|
+____
+date, dateTime, time, dateTimestamp
+____
+
+a|
+____
+date, dateTime, time conversion required for dateDaysSince, _et. al._
+____
+
+a|
+____
+duration
+____
+
+a|
+____
+javax.xml.datatype. Duration
+____
+
+a|
+____
+yearMonthDuration, dayTimeDuration
+____
+
+|
+a|
+____
+boolean
+____
+
+a|
+____
+java.lang.Boolean
+____
+
+a|
+____
+boolean
+____
+
+a|
+____
+boolean
+____
+
+a|
+____
+list
+____
+
+a|
+____
+java.util.List
+____
+
+a|
+____
+contain multiple child elements
+____
+
+a|
+____
+array (homogeneous)
+____
+
+a|
+____
+context
+____
+
+a|
+____
+java.util.Map
+____
+
+a|
+____
+contain attributes and child elements
+____
+
+|
+|===
+
+Sometimes we do not want to evaluate a FEEL expression _e_, we just want to know the type of *e*_._ Note that if _e_ has QNs, then a context may be needed for type inference. We write *type(*_e_*)* as the type of the domain element *FEEL(*_e,_ *c)*.
+
+===== Functions Seamantics
+
+FEEL functions can be:
+
+* {blank}
+* {blank}
+* {blank}
+
+====== built-in, _e.g._, +
+_sum_ (see clause 10.3.4.4), oruser-defined, _e.g., +
+function(age) age < 21_, orexternally defined, _e.g._, +
+_function(angle) external \{ +
+java: \{ +
+class: “java.lang.Math ”, +
+method signature: “cos(double)” +
+}}_ Built-in Functions
+
+The built-in functions are described in detail in section 10.3.4. In particular, function signatures and parameter domains are specified. Some functions have more than one signature.
+
+Built-in functions are invoked using the same syntax as other functions (grammar rule 40). The actual parameters must conform to the parameter domains in at least one signature before or after applying implicit conversions, or the result of the invocation is *null*.
+
+====== User-defined functions
+
+User-defined functions (grammar rule 55) have the form
+
+____
+_function(X1, ... Xn) body_
+____
+
+The terms _X1, ... Xn_ are formal parameters. Each formal parameter has the form _ni_ or _ni_ :_ti_, where the _ni_ are the parameter names and _ti_ are their types. If the type isn’t specified, _Any_ is assumed. The meaning of FEEL(_function(X1, ... X~n~) body_, *s*) is an element in the FEEL semantic domain that we denote as *function(argument list: [*_X1, ... X~n~_*], body:* _body_*, scope: s)* (shortened to *f* below). FEEL functions are lexical closures, _i.e.,_ the _body_ is an expression that references the formal parameters and any other names in scope *s*.
+
+User-defined functions are invoked using the same syntax as other functions (grammar rule 38). The meaning of an invocation _f(n1:e1,_..._,nn:en)_ in scope *s* is FEEL(_f,_ *s*) applied to arguments __n1:__FEEL(_e1,_ *s*)... __,nn:__FEEL(_en,_ *s*). This can also be written as **f(n**1:**e**1... _,_*n*~n~:*e*~n~).
+
+The arguments **n**1:**e**1... _,_*n*~n~:*e*~n~ conform to the argument list *[*_X1, ... X~n~_*]* if **type(e**i**)** conforms to _ti_ before or after applying implicit conversions or _ti_ is not specified in _Xi_, for all _i_ in _1. .n._ The result of applying *f* to the interpreted arguments **n**1:**e**1... _,_*n*~n~:*e*~n~ is determined as follows. If *f* is not a function, or if the arguments do not conform to the argument list, the result of the invocation is *null*. Otherwise, let *c* be a context with entries **n**1:**e**1... _,_*n*~n~:*e*~n~. The result of the invocation is FEEL(_body, *s’*_), where *s'* = insert before(*s*, 1, *c*) (see 10.3.4.4).
+
+Invocable elements (Business Knowledge Models or Decision Services) are invoked using the same syntax as other functions (grammar rule 38). An Invocable is equivalent to a FEEL function whose parameters are the invocable’s inputs (see 10.4)
+
+====== Externally-defined functions
+
+FEEL externally-defined functions have the following form +
+_function (X1, ... X~n~) external mapping-information_
+
+Mapping-information is a context that SHALL have one of the following forms:
+
+____
+_\{_
+
+_java: \{class: class-name, method signature: method-signature}_
+
+_}_
+
+or
+
+_\{_
+
+_pmml: \{document: IRI, model: model-name}_
+
+_}_
+____
+
+The meaning of an externally defined function is an element in the semantic domain that we denote as *function(argument list: [*_X1, ... X~n~_*], external: mapping-information)*.
+
+The _java_ form of the mapping information indicates that the external function is to be accessed as a method on a Java class. The _class-name_ SHALL be the string name of a Java class on the classpath. Classpath configuration is implementation-defined. The _method-signature_ SHALL be a string consisting of the name of a public static method in the named class, followed by an argument list containing only Java argument type names. The argument type information SHOULD be used to resolve overloaded methods and MAY be used to detect out-of-domain errors before runtime.
+
+The _pmml_ form of the mapping information indicates that the external function is to be accessed as a PMML model. The _IRI_ SHALL be the resource identifier for a PMML document. The _model-name_ is optional. If the _model-name_ is specified, it SHALL be the name of a model in the document to which the _IRI_ refers. If no _model-name_ is specified, the external function SHALL be the first model in the document.
+
+When an externally-defined function is invoked, actual argument values and result value are converted when possible using the type mapping table for Java or PMML (see *Table _47_*). When a conversion is not possible, *null* is substituted. If a result cannot be obtained, _e.g._ an exception is thrown, the result of the invocation is *null*. If the externally-defined function is of type PMML, and PMML invocation results in a single predictor output, the result of the externally-defined function is the single predictor output's value.
+
+Passing parameter values to the external method or model requires knowing the expected parameter types. For Java, this information is obtained using reflection. For PMML, this information is obtained from the mining schema and data dictionary elements associated with independent variables of the selected model.
+
+Note that *DMN* does not completely define the semantics of a Decision Model that uses externally-defined functions. Externally-defined functions SHOULD have no side-effects and be deterministic.
+
+====== Function name
+
+To name a function, define it as a context entry. For example:
+
+____
+_\{_
+
+_isPositive : function(x) x > 0,_
+
+_isNotNegative : function(x) isPositive(x+ 1), result: isNotNegative(0)_
+
+_}_
+____
+
+======  Positional and named parameters
+
+An invocation of any FEEL function (built-in, user-defined, or externally-defined) can use positional parameters or named parameters. If positional, all parameters SHALL be supplied. If named, unsupplied parameters are bound to *null*.
+
+===== For loop expression
+
+The _for loop expression_ iterates over lists of elements or ranges of numbers. The general syntax is:
+
+_for i~1~ in ic~1~ [, i~2~ in ic~2~ [, ...]] return e_
+
+where:
+
+* {blank}
+* {blank}
+* {blank}
+
+_ic~1~, ic~2~, ..., ic~n~_ are _iteration contextsi~1~, i~2~, ..., i~n~_ are variables bound to each element in the _iteration contexte_ is the *return* expressionAn _iteration context_ may either be an expression that returns a list of elements, or two expressions that return integers connected by “..”. Examples of valid iteration contexts are:
+
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+
+[ 1, 2, 3]a list1..1050..40x..x+10A _for loop expression_ will iterate over each element in the _iteration context_, binding the element to the corresponding variable _i~n~_ and evaluating the expression _e_ in that scope.
+
+When the _iteration context_ is a range of numbers, the _for loop expression_ will iterate over the range incrementing or decrementing the value of _i~n~_ by 1, depending if the range is ascendant (when the resulting integer from the first expression is lower than the second) or descendant (when the resulting integer from the first expression is higher than the second).
+
+The result of the _for loop expression_ is a list containing the result of the evaluation of the expression _e_ for each individual iteration in order.
+
+The expression _e_ may also reference an implicitly defined variable called “*_partial_*” that is a list containing all the results of the previous iterations of the expression. The variable “*_partial_*” is immutable. E.g.: to calculate the factorial list of numbers, from 0 to N, where N is a non-negative integer, one may write:
+
+____
+_for i in 0..N return if i = 0 then 1 else i * partial[-1]_
+____
+
+When multiple _iteration contexts_ are defined in the same _for loop expression_, the resulting iteration is a cross-product of the elements of the _iteration contexts_. The iteration order is from the inner _iteration context_ to the outer _iteration context_.
+
+____
+E.g., the result of the following _for loop expression_ is:
+
+_for i in [i~1~,i~2~], j in [j~1~j~2~] return e *= [ r~1~, r~2~, r~3~, r~4~ ]*_
+
+Where:
+
+*_r~1~ = FEEL( e, \{ i: i~1~, j: j~1~, partial:[], ... } )_*
+
+*_r~2~ = FEEL( e, \{ i: i~1~, j: j~2~, partial:[r~1~], ... )_*
+
+*_r~3~ = FEEL( e, \{ i: i~2~, j: j~1~, partial:[r~1~,r~2~], ... } )_*
+____
+
+*_r~4~ = FEEL( e, \{ i: i~2~, j: j~2~, partial:[r~1~,r~2~,r~3~], ... } )_*
+
+===== Semantic mappings
+
+The meaning of each substantive grammar rule is given below by mapping the syntax to a value in the semantic domain. The value may depend on certain input values, themselves having been mapped to the semantic domain. The input values may have to obey additional constraints. The input domain(s) may be a subset of the semantic domain. Inputs outside of their domain result in a *null* value, unless the implicit conversion _from singleton list_ (10.3.2.9.4) can be applied.
+
+.[#_Toc87278993 .anchor]##*Table 63: Semantics of invocation*
+[width="100%",cols="17%,31%,52%",options="header",]
+|===
+a|
+____
+*Grammar Rule*
+____
+
+a|
+____
+*FEEL Syntax*
+____
+
+a|
+____
+*Mapped to Domain*
+____
+
+a|
+____
+55
+____
+
+a|
+____
+_function(n1, ...nN) e_
+____
+
+a|
+____
+*function(argument list: [*_n1, ... nN_*], body:* _e_*, scope: s)*
+____
+
+a|
+____
+55
+____
+
+a|
+____
+_function(n1, ...nN) external e_
+____
+
+a|
+____
+*function(argument list: [*_n1, ... nN_*], external: e)*
+____
+
+|===
+
+See 10.3.2.7.
+
+.[#_Toc87278994 .anchor]##*Table 64: General semantics of properties*
+[width="100%",cols="17%,31%,52%",options="header",]
+|===
+a|
+____
+*Grammar Rule*
+____
+
+a|
+____
+*FEEL Syntax*
+____
+
+a|
+____
+*Mapped to Domain*
+____
+
+a|
+____
+44
+____
+
+a|
+____
+_for i~1~ in ic~1~, i~2~ in ic~2~, ... return e_
+____
+
+a|
+____
+*[ FEEL(*_e_, *s'), FEEL(*_e_, *si, ... ]*
+____
+
+a|
+____
+45
+____
+
+a|
+____
+_if e1 then e2 else e3_
+____
+
+a|
+____
+*if FEEL(*_e1_*) is true then FEEL(*_e2_*) else FEEL(*_e3_*)*
+____
+
+a|
+____
+46
+____
+
+a|
+____
+_some n1 in e1, n2 in e2, ... satisfies e_
+____
+
+a|
+____
+*false or FEEL(*_e,_ *s') or FEEL(*_e,_ *s") or ...*
+____
+
+a|
+____
+46
+____
+
+a|
+____
+_every n 1 in e 1, n2 in e2, ... satisfies e_
+____
+
+a|
+____
+*true and FEEL(*_e,_ *s') and FEEL(*_e,_ *s") and ...*
+____
+
+a|
+____
+47
+____
+
+a|
+____
+_e1 or e2 or ..._
+____
+
+a|
+____
+*FEEL(*_e1_*) or FEEL(*_e2_*) or* ...
+____
+
+a|
+____
+48
+____
+
+a|
+____
+_e1 and e2 and ..._
+____
+
+a|
+____
+*FEEL(*_e1_*) and FEEL(*_e2_*) and* ...
+____
+
+|49.a a|
+____
+_e = null_
+____
+
+a|
+____
+*FEEL(*_e_*) is null*
+____
+
+|49.a a|
+____
+_null = e_
+____
+
+a|
+____
+*FEEL(*_e_*) is null*
+____
+
+|49.a a|
+____
+_e != null_
+____
+
+a|
+____
+*FEEL(*_e_*) is not null*
+____
+
+|49.a a|
+____
+_null != e_
+____
+
+a|
+____
+*FEEL(e) is not null*
+____
+
+|===
+
+Notice that we use bold syntax to denote contexts, lists, conjunctions, disjunctions, conditional expressions, true, false, and null in the FEEL domain.
+
+The meaning of the conjunction *a and b* and the disjunction *a or b* is defined by ternary logic. Because these are total functions, the input can be *true*, *false*, or *otherwise* (meaning any element of *D* other than *true* or *false*).
+
+A conditional *if a then b else c* is equal to *b* if *a* is *true*, and equal to *c* otherwise.
+
+*s'* is the scope *s* with a special first context containing keys n1, n2, etc. bound to the first element of the Cartesian product of FEEL**(**_e1_*) x* FEEL**(**_e2_*) x ..., s"* is *s* with a special first context containing keys bound to the second element of the Cartesian product, _etc_. When the Cartesian product is empty, the _some ... satisfies_ quantifier returns *false* and the _every ... satisfies_ quantifier returns *true*.
+
+.[#_Toc87278995 .anchor]##*Table 65: List of properties per type*
+[width="100%",cols="31%,29%,20%,20%",options="header",]
+|===
+a|
+____
+*a*
+____
+
+a|
+____
+*b*
+____
+
+a|
+____
+*a and b*
+____
+
+a|
+____
+*a or b*
+____
+
+a|
+____
+true
+____
+
+a|
+____
+true
+____
+
+a|
+____
+true
+____
+
+a|
+____
+true
+____
+
+a|
+____
+true
+____
+
+a|
+____
+false
+____
+
+a|
+____
+false
+____
+
+a|
+____
+true
+____
+
+a|
+____
+true
+____
+
+a|
+____
+otherwise
+____
+
+a|
+____
+null
+____
+
+a|
+____
+true
+____
+
+a|
+____
+false
+____
+
+a|
+____
+true
+____
+
+a|
+____
+false
+____
+
+a|
+____
+true
+____
+
+a|
+____
+false
+____
+
+a|
+____
+false
+____
+
+a|
+____
+false
+____
+
+a|
+____
+false
+____
+
+a|
+____
+false
+____
+
+a|
+____
+otherwise
+____
+
+a|
+____
+false
+____
+
+a|
+____
+null
+____
+
+a|
+____
+otherwise
+____
+
+a|
+____
+true
+____
+
+a|
+____
+null
+____
+
+a|
+____
+true
+____
+
+a|
+____
+otherwise
+____
+
+a|
+____
+false
+____
+
+a|
+____
+false
+____
+
+a|
+____
+null
+____
+
+a|
+____
+otherwise
+____
+
+a|
+____
+otherwise
+____
+
+a|
+____
+null
+____
+
+a|
+____
+null
+____
+
+|===
+
+Negation is accomplished using the built-in function *not*. The ternary logic is as shown in *Table _51_*.
+
+.[#_Toc87278996 .anchor]##*Table 66: Specific semantics of date, time and duration properties*
+[width="100%",cols="43%,57%",options="header",]
+|===
+a|
+____
+*a*
+____
+
+a|
+____
+*not(a)*
+____
+
+a|
+____
+true
+____
+
+a|
+____
+false
+____
+
+a|
+____
+false
+____
+
+a|
+____
+true
+____
+
+a|
+____
+otherwise
+____
+
+a|
+____
+null
+____
+
+|===
+
+Equality and inequality map to several kind- and datatype-specific tests, as shown in *Table _52_*, *Table _53_* and *Table _54_*. By definition, FEEL(_e1 != e2_) is FEEL(_not(e 1= e2)_). The other comparison operators are defined only for the datatypes listed in *Table _54_*. Note that *Table _54_* defines only ‘<’; ‘>’ is similar to ‘<’ and is omitted for brevity; _e1<=e2_ is defined as _e1< e2 or e1= e2._
+
+.[#_Toc87278997 .anchor]##*Table 67: Specific semantics of range properties*
+[width="100%",cols="18%,20%,30%,32%",options="header",]
+|===
+a|
+____
+*Grammar Rule*
+____
+
+a|
+____
+*FEEL Syntax*
+____
+
+a|
+____
+*Input Domain*
+____
+
+a|
+____
+*Result*
+____
+
+a|
+____
+49.a
+____
+
+a|
+____
+_e1 = e2_
+____
+
+a|
+____
+*e1 and e2 must both be of the same kind/datatype – both numbers, both strings, etc.*
+____
+
+a|
+____
+_See below_
+____
+
+a|
+____
+49.a
+____
+
+a|
+____
+_e1 < e2_
+____
+
+a|
+____
+*e1* and *e2* must both be of the same kind/datatype – both numbers, both strings, _etc._
+____
+
+a|
+____
+_See below_
+____
+
+|===
+
+.[#_Toc87278998 .anchor]##*Table 68: Semantics of lists*
+[width="100%",cols="38%,62%",options="header",]
+|===
+a|
+____
+*kind/datatype*
+____
+
+a|
+____
+*_e1 = e2_*
+____
+
+a|
+____
+list
+____
+
+a|
+____
+lists must be same length N and *e1[i] = e2[i]* for 1 ≤ *i* ≤ N.
+____
+
+a|
+____
+context
+____
+
+a|
+____
+contexts must have same set of keys K and *e1.k = e2.k* for every k in K
+____
+
+a|
+____
+range
+____
+
+a|
+____
+the ranges must specify the same endpoint(s) and the same comparison operator or endpoint inclusivity flag.
+____
+
+a|
+____
+function
+____
+
+a|
+____
+internal functions must have the same parameters, body, and scope. Externally defined functions must have the same parameters and external mapping information.
+____
+
+a|
+____
+number
+____
+
+a|
+____
+*value(e1) = value(e2)*. Value is defined in 10.3.2.3.1. Precision is not considered.
+____
+
+a|
+____
+string
+____
+
+a|
+____
+*e1* is the same sequence of characters as *e2*
+____
+
+a|
+____
+date
+____
+
+a|
+____
+*value(e1) = value(e2)*. Value is defined in 10.3.2.3.5
+____
+
+a|
+____
+date and time
+____
+
+a|
+____
+*value(e1) = value(e2)*. Value is defined in 10.3.2.3.6
+____
+
+a|
+____
+time
+____
+
+a|
+____
+*value(e1) = value(e2)*. Value is defined in 10.3.2.3.4.
+____
+
+a|
+____
+days and time duration
+____
+
+a|
+____
+*value(e1) = value(e2)*. Value is defined in 10.3.2.3.7
+____
+
+a|
+____
+years and months duration
+____
+
+a|
+____
+*value(e1) = value(e2)*. Value is defined in 10.3.2.3.8.
+____
+
+a|
+____
+boolean
+____
+
+a|
+____
+*e1* and *e2* must both be *true* or both be *false*
+____
+
+|===
+
+.[#_Toc87278999 .anchor]##*Table 69: Semantics of contexts*
+[width="100%",cols="37%,63%",options="header",]
+|===
+a|
+____
+*datatype*
+____
+
+a|
+____
+*_e1 < e2_*
+____
+
+|number a|
+____
+*value(e1) < value(e2)*. *value* is defined in 10.3.2.3.1. Precision is not considered.
+____
+
+|string a|
+____
+sequence of characters *e1* is lexicographically less than the sequence of characters *e2*. _I.e.,_ the sequences are padded to the same length if needed with _\u0_ characters, stripped of common prefix characters, and then the first character in each sequence is compared.
+____
+
+a|
+____
+date
+____
+
+a|
+____
+e1 < e2 if the year value of e1 < the year value of e2 e1 < e2 if the year values are equal and the month value of e1 < the month value of e2 e1 < e2 if the year and month values are equal and the day value of e1 < the day value of e2
+____
+
+a|
+____
+date and time
+____
+
+a|
+____
+*valuedt(e1) < valuedt(e2)*. *valuedt* is defined in 10.3.2.3.5. If one input has a null timezone offset, that input uses the timezone offset of the other input.
+____
+
+a|
+____
+time
+____
+
+a|
+____
+*valuet(e1) < valuet(e2)*. *valuet* is defined in 10.3.2.3.4. If one input has a null timezone offset, that input uses the timezone offset of the other input.
+____
+
+a|
+____
+days and time duration
+____
+
+a|
+____
+*valuedtd(e1) < valuedtd(e2)*. *valuedtd* is defined in 10.3.2.3.7.
+____
+
+a|
+____
+years and months duration
+____
+
+a|
+____
+*valueymd(e1) < valueymd(e2)*. *valueymd* is defined in 10.3.2.3.8.
+____
+
+|===
+
+ +
+FEEL supports additional syntactic sugar for comparison. Note that Grammar Rules (clause 10.3.1.2) are used in decision table condition cells. These decision table syntaxes are defined in *Table _55_*.
+
+.[#_Toc87279000 .anchor]##*Table 70: Semantics of XML elements*
+[width="100%",cols="16%,24%,31%,29%",options="header",]
+|===
+a|
+____
+*Grammar Rule*
+____
+
+a|
+____
+*FEEL Syntax*
+____
+
+a|
+____
+*Equivalent FEEL Syntax*
+____
+
+a|
+____
+*applicability*
+____
+
+|49.b a|
+____
+_e1 between e2 and e3_
+____
+
+a|
+____
+_e1 >= e2 and e1 <= e3_
+____
+
+|
+|49.c a|
+____
+_e1 in [e2,e3, ... ]_
+____
+
+a|
+____
+_e1 = e2 or e1 = e3 or..._
+____
+
+a|
+____
+e2 and e3 are endpoints
+____
+
+|49.c a|
+____
+_e1 in [e2,e3, ... ]_
+____
+
+a|
+____
+_e1 in e2 or e1 in e3 or..._
+____
+
+a|
+____
+e2 and e3 are ranges
+____
+
+|49.c a|
+____
+_e1 in <=e2_
+____
+
+a|
+____
+_e1 <= e2_
+____
+
+|
+|49.c a|
+____
+_e1 in <e2_
+____
+
+a|
+____
+_e1 < e2_
+____
+
+|
+|49.c a|
+____
+_e1 in >=e2_
+____
+
+a|
+____
+_e1 >= e2_
+____
+
+|
+|49.c a|
+____
+_e1 in >e2_
+____
+
+a|
+____
+_e1 > e2_
+____
+
+|
+|49.c a|
+____
+_e1 in (e2..e3)_
+____
+
+a|
+____
+_e1 > e2 and e1<e3_
+____
+
+|
+|49.c a|
+____
+_e1 in (e2..e3]_
+____
+
+a|
+____
+_e1 > e2 and e1<=e3_
+____
+
+|
+|49.c a|
+____
+_e1 in [e2..e3)_
+____
+
+a|
+____
+_e1 >= e2 and e1<e3_
+____
+
+|
+|49.c a|
+____
+_e1 in [e2..e3]_
+____
+
+a|
+____
+_e1 >= e2 and e1<=e3_
+____
+
+|
+|49.c a|
+____
+_e1 in e2_
+____
+
+a|
+____
+_e1 = e2_
+____
+
+a|
+____
+e2 is a qualified name that does _not_ evaluate to a list
+____
+
+|49.c a|
+____
+_e1 in e2_
+____
+
+a|
+____
+_list contains( e2, e1 )_
+____
+
+a|
+____
+e1 is a simple value that is not a list and e2 is a qualified name that evaluates to a list
+____
+
+|49.c a|
+____
+_e1 in e2_
+____
+
+a|
+____
+_\{ ? : e1, r : e2 }.r_
+____
+
+a|
+____
+e2 is a boolean expression that uses the special variable “?”
+____
+
+|===
+
+Addition and subtraction are defined in *Table _56_* and *Table _57_*. Note that if input values are not of the listed types, the result is *null*.
+
+.[#_Toc87279001 .anchor]##*Table 71: Semantics of XML values*
+[width="100%",cols="21%,32%,47%",options="header",]
+|===
+a|
+____
+*Grammar Rule*
+____
+
+|*FEEL* a|
+____
+*Input Domain and Result*
+____
+
+a|
+____
+19
+____
+
+|_e1 + e2_ a|
+____
+_See below_
+____
+
+a|
+____
+20
+____
+
+|_e1 – e2_ a|
+____
+_See below_
+____
+
+|===
+
+.date time string – a string value consisting of a date string value, as specified above, optionally followed by the character "T" followed by a time string value as specified above. +
+duration string – a string value in the lexical space of the xs:dayTimeDuration or xs:yearMonthDuration datatypes specified by the XQuery 1.0 and XPath 2.0 Data Model. [#_Toc87279002 .anchor]##*Table 72: Semantics of conversion functions*
+[width="100%",cols="17%,14%,53%,16%",options="header",]
+|===
+a|
+____
+*type(e1)*
+____
+
+a|
+____
+*type(e2)*
+____
+
+a|
+____
+*_e1 + e2, e1 – e2_*
+____
+
+a|
+____
+*result type*
+____
+
+a|
+____
+number
+____
+
+a|
+____
+number
+____
+
+a|
+____
+Let *e1=(p1,s1)* and *e2=(p2,s2)* as defined in 10.3.2.3.1. If *value(p1,s1) +/- value(p2,s2)* requires a scale outside the range of valid scales, the result is *null*. Else the result is *(p,s)* such that
+____
+
+a|
+____
+number
+____
+
+| | a|
+* {blank}
+
+|*value(p,s) = value(p1,s1) +/- value(p2,s2) + ε*
+| | a|
+* {blank}
+
+|*s ≤ max(s1,s2)*
+| | a|
+* {blank}
+
+|*s* is maximized subject to the limitation that *p* has 34 digits or less
+| | a|
+* {blank}
+
+|*ε* is a possible rounding error.
+a|
+____
+date and time
+____
+
+a|
+____
+date and time
+____
+
+a|
+____
+Addition is undefined. Subtraction is defined as *valuedtj^1^ (valuedt(e1)-valuedt(e2))*, where *valuedt* is defined in 10.3.2.3.5 and *valuedtj^1^* is defined in
+____
+
+a|
+____
+days and time duration
+____
+
+| | a|
+____
+10.3.2.3.7. In case either value is of type date, it is implicitly converted into a date and time with time of day of UTC midnight ("00:00:00") as defined in
+____
+
+|
+| | a|
+____
+10.3.2.3.6. Subtraction requires either both values to have a timezone or both not to have a timezone.
+____
+
+|
+| | a|
+____
+Subtraction is undefined for the case where only one of the values has a timezone.
+____
+
+|
+a|
+____
+time
+____
+
+a|
+____
+time
+____
+
+a|
+____
+Addition is undefined. Subtraction is defined as *valuedtd^-1^ (valuet(e1)-valuet(e2))* where *valuet* is defined in 10.3.2.3.4 and *valuedtd -1* is defined in 10.3.2.3.7.
+____
+
+a|
+____
+days and time duration
+____
+
+a|
+____
+years and months duration
+____
+
+a|
+____
+years and months duration
+____
+
+a|
+____
+*valueymd^-1^(valueymd(e1) +/- valueymd(e2))* where *valueymd* and *valueymd -1* is defined in 10.3.2.3.8.
+____
+
+a|
+____
+years and months duration
+____
+
+a|
+____
+days and time duration
+____
+
+a|
+____
+days and time duration
+____
+
+a|
+____
+*valuedtd ^-1^(valuedtd(e1) +/- valuedtd(e2))* where *valuedtd* and *valuedtd^-1^* is defined in 10.3.2.3.7.
+____
+
+a|
+____
+days and time duration
+____
+
+a|
+____
+date and time
+____
+
+a|
+____
+years and months duration
+____
+
+a|
+____
+date and time (date(*e1*.year +/– *e2*.years + floor((*e1*.month +/– *e2*.months)/12),
+
+*e1*.month +/– *e2*.months – floor((*e1*.month +/– *e2*.months)/12) * 12, *e1*.day), time(*e1*)),
+
+where the named properties are as defined in *Table _65_* below, and the date, date and time, time and floor functions are as defined in 10.3.4, *valuedt* and *valuedt ^-1^* is defined in 10.3.2.3.5 and *valueymd* is defined in 10.3.2.3.8.
+____
+
+a|
+____
+date and time
+____
+
+a|
+____
+years and months duration
+____
+
+a|
+____
+date and time
+____
+
+a|
+____
+Subtraction is undefined. Addition is commutative and is defined by the previous rule.
+____
+
+a|
+____
+date and time
+____
+
+a|
+____
+date and time
+____
+
+a|
+____
+days and time duration
+____
+
+a|
+____
+*valuedt ^-1^(valuedt(e1) +/- valuedtd(e2))* where *valuedt* and *valuedt ^-1^* is defined in 10.3.2.3.5 and *valuedtd* is defined in 10.3.2.3.7.
+____
+
+a|
+____
+date and time
+____
+
+a|
+____
+days and time duration
+____
+
+a|
+____
+date and time
+____
+
+a|
+____
+Subtraction is undefined. Addition is commutative and is defined by the previous rule.
+____
+
+a|
+____
+date and time
+____
+
+a|
+____
+time
+____
+
+a|
+____
+days and time duration
+____
+
+a|
+____
+*valuet ^-1^(valuet(e1) +/- valuedtd(e2))* where *valuet* and *valuet ^-1^* are defined in 10.3.2.3.4 and *valuedtd* is defined in 10.3.2.3.7.
+____
+
+a|
+____
+time
+____
+
+a|
+____
+days and time duration
+____
+
+a|
+____
+time
+____
+
+a|
+____
+Subtraction is undefined. Addition is commutative and is defined by the previous rule.
+____
+
+a|
+____
+time
+____
+
+a|
+____
+string
+____
+
+a|
+____
+string
+____
+
+a|
+____
+Subtraction is undefined. Addition concatenates the strings. The result is a string containing the sequence of characters in e1 followed by the sequence of characters in e2.
+____
+
+a|
+____
+string
+____
+
+a|
+____
+date
+____
+
+a|
+____
+years and months duration
+____
+
+a|
+____
+*date( e1.year +/– e2.years + floor((e1.month +/– e2.months)/12), e1.month +/– e2.months – floor((e1.month +/– e2.months)/12) * 12, e1.day )*, where the named properties are as defined in *Table _65_* below, and the date and floor functions are as defined in 10.3.4.
+____
+
+a|
+____
+date
+____
+
+a|
+____
+years and months duration
+____
+
+a|
+____
+date
+____
+
+a|
+____
+Subtraction is undefined. Addition is commutative and is defined by the previous rule.
+____
+
+a|
+____
+date
+____
+
+a|
+____
+date
+____
+
+a|
+____
+days and time duration
+____
+
+a|
+____
+date(valuedt^-1^ (valuedt(e1) +/- valuedtd(e2))) where valuedt and valuedt^-1^ is defined in 10.3.2.3.5 and valuedtd is defined in 10.3.2.3.7.
+____
+
+a|
+____
+date
+____
+
+a|
+____
+days and time duration
+____
+
+a|
+____
+date
+____
+
+a|
+____
+Subtraction is undefined. Addition is commutative and is defined by the previous rule.
+____
+
+a|
+____
+date
+____
+
+|===
+
+Multiplication and division are defined in *Table _58_* and *Table _59_*. Note that if input values are not of the listed types, the result is *null*.
+
+.[#_Toc87279003 .anchor]##*Table 73: Semantics of Boolean functions*
+[width="100%",cols="24%,36%,40%",options="header",]
+|===
+a|
+____
+*Grammar Rule*
+____
+
+|*FEEL* a|
+____
+*Input Domain and Result*
+____
+
+a|
+____
+21
+____
+
+|_e1 * e2_ a|
+____
+_See below_
+____
+
+a|
+____
+22
+____
+
+|_e1 / e2_ a|
+____
+_See below_
+____
+
+|===
+
+.[#_Toc87279004 .anchor]##*Table 74: Semantics of string functions*
+[width="99%",cols="15%,13%,28%,29%,15%",options="header",]
+|===
+a|
+____
+*type(e1)*
+____
+
+a|
+____
+*type(e2)*
+____
+
+|*_e1 * e2_* |*_e1 / e2_* a|
+____
+*result type*
+____
+
+a|
+____
+number *e1=(p1,s1)*
+____
+
+a|
+____
+number *e2=(p2,s2)*
+____
+
+a|
+____
+If *value(p1,s1) * value(p2,s2)* requires a scale outside the range of valid scales, the result is *null*. Else the result is *(p,s)* such that
+____
+
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+
+a|
+____
+*value(p,s) = value(p1,s1) * value(p2,s2) + εs ≤ s1+s2s* is maximized subject to the limitation that *p* has 34 digits or less**ε** is a possible rounding errorIf *value(p2,s2)=0* or *value(p1,s1) / value(p2,s2)* requires a scale outside the range of valid scales, the result is *null*. Else the result is *(p,s)* such that
+____
+
+* {blank}
+* {blank}
+* {blank}
+
+*value(p,s) = value(p1,s1) / value(p2,s2) + εs ≤ s1-s2s* is maximized subject to the limitation that *p* has 34 digits or less
+
+* {blank}
+
+a|
+____
+*ε* is a possible rounding errornumber
+____
+
+a|
+____
+years and months duration
+____
+
+a|
+____
+number
+____
+
+a|
+____
+*valueymd ^-1^(valueymd(e1) * value(e2))* where *valueymd* and *valueymd -1* are defined in 10.3.2.3.8
+____
+
+a|
+____
+If *value(e2)=0*, the result is *null*. Else the result is *valueymd^-^ ^1^(valueymd(e1) / value(e2))* where *valueymd* and *valueymd^-1^* are defined in 10.3.2.3.8.
+____
+
+a|
+____
+years and months +
+duration
+____
+
+a|
+____
+number
+____
+
+a|
+____
+years and months duration
+____
+
+a|
+____
+_See above, reversing e1 and e2_
+____
+
+a|
+____
+_Not allowed_
+____
+
+a|
+____
+years and months +
+duration
+____
+
+a|
+____
+years and months duration
+____
+
+a|
+____
+years and months duration
+____
+
+a|
+____
+_Not allowed_
+____
+
+a|
+____
+If *valueymd(e2)=0*, the result is *null*. Else the result is *valueymd(e1) / valueymd(e2)* where *valueymd* is defined in 10.3.2.3.8.
+____
+
+a|
+____
+number
+____
+
+a|
+____
+days and time duration
+____
+
+a|
+____
+number
+____
+
+a|
+____
+*valuedtd^-1^(valuedtd(e1) * value(e2))* where *valuedtd* and *valuedtd -1* are defined in 10.3.2.3.7.
+____
+
+a|
+____
+If *value(e2)=0*, the result is *null*.
+
+Else the result is *valuedtd ^1^(valuedtd(e1) * value(e2))* where *valuedtd* and *valuedtd -1* are
+
+defined in 10.3.2.3.7.
+____
+
+a|
+____
+days and time duration
+____
+
+a|
+____
+number
+____
+
+a|
+____
+days and time duration
+____
+
+a|
+____
+_See above, reversing e1 and e2_
+____
+
+a|
+____
+_Not allowed_
+____
+
+a|
+____
+days and time duration
+____
+
+a|
+____
+days and time duration
+____
+
+a|
+____
+days and time
+
+duration
+____
+
+a|
+____
+_Not allowed_
+____
+
+a|
+____
+If *valuedtd(e2)=0*, the result is *null*. Else the result is *valuedtd(e1) / valuedtd(e2)* where *~valuedtd~* is defined in 10.3.2.3.7.
+____
+
+a|
+____
+number
+____
+
+|===
+
+.[#_Toc87279005 .anchor]##*Table 75: Semantics of list functions*
+[width="100%",cols="15%,12%,33%,40%",options="header",]
+|===
+a|
+____
+*Grammar Rule*
+____
+
+a|
+____
+*FEEL Syntax*
+____
+
+a|
+____
+*Input Domain*
+____
+
+a|
+____
+*Result*
+____
+
+a|
+____
+23
+____
+
+|_e1 ** e2_ a|
+____
+*type(e1)* is number. *value(e2)* is a number in the range
+
+[-999,999,999..999,999,999].
+____
+
+a|
+____
+If *value(e1)value(e2 )* requires a scale that is out of range, the result is *null*. Else the result is *(p,s)* such that
+____
+
+* {blank}
+* {blank}
+* {blank}
+
+|===
+
+*value(p,s)= value(e1)^value(e^2^)^ + εp* is limited to 34 digits**ε** is rounding error
+
+Type-checking is defined in *Table _61_*. Note that _type_ is not mapped to the domain, and *null* is the only value in the Null type (see 10.3.2.1).
+
+Before evaluating the _instance of_ operator both operands are mapped to the type lattice *L* (see 10.3.2.9).
+
+.[#_Toc87279006 .anchor]##*Table 76: Semantics of numeric functions*
+[width="100%",cols="13%,18%,29%,40%",options="header",]
+|===
+a|
+____
+*Grammar Rule*
+____
+
+a|
+____
+*FEEL Syntax*
+____
+
+a|
+____
+*Mapped to Domain*
+____
+
+a|
+____
+*Examples*
+____
+
+a|
+____
+51
+____
+
+a|
+____
+_e1 instance of e2_
+____
+
+a|
+____
+**If _e~2~_ cannot be mapped to a node in the lattice L, the result is null. +
+**If *e~1~* is *null* and *type(*_e~2~_*)* is _Null_, the result is *true*.** +
+**If *type(*_e~1~_*)* conforms to *type(*_e~2~_*)* (see section 10.3.2.9) and *e~1~* is** +
+**not *null,* the result is *true*. Otherwise the result is *false*.
+____
+
+a|
+____
+_[123] instance of list<number>_ is *true* _"abc" instance of string_ is *true*
+
+_123 instance of string_ is *false*
+
+_123 instance of list_ is *null* as a list type requires parameters (see rule 54).
+____
+
+|===
+
+Negative numbers are defined in *Table _62_*.
+
+.[#_Toc87279007 .anchor]##*Table 77: Semantics of date and time functions*
+[width="100%",cols="24%,36%,40%",options="header",]
+|===
+a|
+____
+*Grammar Rule*
+____
+
+a|
+____
+*FEEL Syntax*
+____
+
+a|
+____
+*Equivalent FEEL Syntax*
+____
+
+a|
+____
+24
+____
+
+a|
+____
+_-e_
+____
+
+a|
+____
+_0-e_
+____
+
+|===
+
+Invocation is defined in *Table _63_*. An invocation can use positional arguments or named arguments. If positional, all arguments must be supplied. If named, unsupplied arguments are bound to *null*. Note that *e* can be a user-defined function, a user-defined external function, or a built-in function. The arguments are subject to implicit conversions (10.3.2.9.4). If the argument types before or after conversion do not conform to the corresponding parameter types, the result of the invocation is *null*.
+
+.[#_Toc87279008 .anchor]##*Table 78: Semantics of range functions*
+[width="100%",cols="7%,3%,3%,5%,26%,28%,28%",options="header",]
+|===
+a|
+____
+*Grammar Rule*
+____
+
+| | | a|
+____
+*FEEL*
+____
+
+a|
+____
+*Mapped to Domain*
+____
+
+a|
+____
+*Applicability*
+____
+
+a|
+____
+38,
+____
+
+|39, |42 | a|
+____
+_e(e1,..)_
+____
+
+a|
+____
+*e(e1*,...*)*
+____
+
+a|
+____
+*e* is a function with matching arity and conforming parameter types
+____
+
+a|
+____
+38,
+____
+
+|39, |40, |41 a|
+____
+_e(n1:e1,...)_
+____
+
+a|
+____
+*e(*_n1_*:e1,...)*
+____
+
+a|
+____
+*e* is a function with matching parameter names and conforming parameter types
+____
+
+|===
+
+Properties are defined in *Table _64_* and *Table _65_*. If *type(*_e_*)* is date and time, time, or duration, and *name* is a property name, then the meaning is given by *Table _65_* and *Table _66_*. For example, FEEL(_date and time("2012-03-07Z").year_) = *2012*.
+
+.[#_Toc87279009 .anchor]##*Table 79: Temporal built-in functions*
+[width="100%",cols="18%,26%,28%,28%",options="header",]
+|===
+a|
+____
+*Grammar Rule*
+____
+
+a|
+____
+*FEEL*
+____
+
+a|
+____
+*Mapped to Domain*
+____
+
+a|
+____
+*Applicability*
+____
+
+a|
+____
+18
+____
+
+a|
+____
+_e.name_
+____
+
+a|
+____
+*e."name"*
+____
+
+a|
+____
+*type(e)* is a context
+____
+
+a|
+____
+18
+____
+
+a|
+____
+_e.name_
+____
+
+a|
+____
+_see below_
+____
+
+a|
+____
+*type(e)* is a date/time/duration
+____
+
+|===
+
+.[#_Toc87279010 .anchor]##*Table 80: Semantics of sort functions*
+[width="100%",cols="22%,47%,31%",options="header",]
+|===
+a|
+____
+*type(_e_)*
+____
+
+a|
+____
+*_e ._ name*
+____
+
+a|
+____
+*name =*
+____
+
+a|
+____
+date
+____
+
+a|
+____
+result is the **name**d component of the date object *e*. Valid names are shown to the right.
+____
+
+a|
+____
+year, month, day, weekday
+____
+
+a|
+____
+date and time
+____
+
+a|
+____
+result is the **name**d component of the date and time object *e*. Valid names are shown to the right.
+____
+
+a|
+____
+year, month, day, weekday, hour, minute, second, time offset, timezone
+____
+
+a|
+____
+time
+____
+
+a|
+____
+result is the **name**d component of the time object *e*. Valid names are shown to the right
+____
+
+a|
+____
+hour, minute, second, time offset, timezone
+____
+
+a|
+____
+years and months duration
+____
+
+a|
+____
+result is the **name**d component of the years and months duration object *e*. Valid names are shown to the right.
+____
+
+a|
+____
+years, months
+____
+
+a|
+____
+days and time duration
+____
+
+a|
+____
+result is the **name**d component of the days and time duration object *e*. Valid names are shown to the right.
+____
+
+a|
+____
+days, hours, minutes, seconds
+____
+
+a|
+____
+range
+____
+
+a|
+____
+result is the **name**d component of the range object *e*. Valid names are shown to the right.
+____
+
+a|
+____
+start, end, start included, end included
+____
+
+|===
+
+.[#_Toc87279011 .anchor]##*Table 81: Semantics of Context functions*
+[width="100%",cols="22%,20%,58%",options="header",]
+|===
+a|
+____
+*name*
+____
+
+a|
+____
+*_type_(name)*
+____
+
+a|
+____
+*description*
+____
+
+a|
+____
+year
+____
+
+a|
+____
+number
+____
+
+a|
+____
+The year number as an integer in the interval [-999,999,999 .. 999,999,999]
+____
+
+a|
+____
+month
+____
+
+a|
+____
+number
+____
+
+a|
+____
+The month number as an integer in the interval [1..12], where 1 is January and 12 is December
+____
+
+a|
+____
+day
+____
+
+a|
+____
+number
+____
+
+a|
+____
+The day of the month as an integer in the interval [1 ..31]
+____
+
+a|
+____
+weekday
+____
+
+a|
+____
+number
+____
+
+a|
+____
+The day of the week as an integer in the interval [1. .7] where 1 is Monday and 7 is Sunday (compliant with the definition in ISO 8601)
+____
+
+a|
+____
+hour
+____
+
+a|
+____
+number
+____
+
+a|
+____
+The hour of the day as an integer in the interval [0..23]
+____
+
+a|
+____
+minute
+____
+
+a|
+____
+number
+____
+
+a|
+____
+The minute of the hour as an integer in the interval [0..59]
+____
+
+a|
+____
+second
+____
+
+a|
+____
+number
+____
+
+a|
+____
+The second of the minute as a decimal in the interval [0. .60)
+____
+
+a|
+____
+time offset
+____
+
+a|
+____
+days and time duration
+____
+
+a|
+____
+The duration offset corresponding to the timezone the date or date and time value represents. The time offset duration must be in the interval *[duration(“-PT14H”)..duration(“PT14H”)]* as per the XML Schema Part 2 dateTime datatype. The *time offset* property returns null when the object does not have a time offset set.
+____
+
+a|
+____
+timezone
+____
+
+a|
+____
+string
+____
+
+a|
+____
+The timezone identifier as defined in the IANA Time Zones database. The *timezone* property returns null when the object does not have an IANA timezone defined.
+____
+
+a|
+____
+name
+____
+
+a|
+____
+type(name)
+____
+
+a|
+____
+description
+____
+
+a|
+____
+years
+____
+
+a|
+____
+number
+____
+
+a|
+____
+The normalized years component of a years and months duration value as an integer. This property returns null when invoked on a days and time duration value.
+____
+
+a|
+____
+months
+____
+
+a|
+____
+number
+____
+
+a|
+____
+The normalized months component of a years and months duration value. Since the value is normalized, this property must return an integer in the interval [0.. 11]. This property returns null when invoked on a days and time duration value.
+____
+
+a|
+____
+days
+____
+
+a|
+____
+number
+____
+
+a|
+____
+The normalized days component of a days and time duration value as an integer. This property returns null when invoked on a years and months duration value.
+____
+
+a|
+____
+Hours
+____
+
+a|
+____
+number
+____
+
+a|
+____
+The normalized hours component of a days and time duration value. Since the value is normalized, this property must return an integer in the interval [0..23]. This property returns null when invoked on a years and months duration value.
+____
+
+a|
+____
+minutes
+____
+
+a|
+____
+number
+____
+
+a|
+____
+The normalized minutes component of a days and time duration value. Since the value is normalized, this property must return an integer in the interval [0..59]. This property returns null when invoked on a years and months duration value.
+____
+
+a|
+____
+seconds
+____
+
+a|
+____
+number
+____
+
+a|
+____
+The normalized minutes component of a days and time duration value. Since the value is normalized, this property must return a decimal in the interval [0..60). This property returns null when invoked on a years and months duration value.
+____
+
+|===
+
+.[#_Toc87279012 .anchor]##*Table* *82: Miscellaneous functions*
+[width="100%",cols="34%,33%,33%",options="header",]
+|===
+a|
+____
+*name*
+____
+
+a|
+____
+*type(name)*
+____
+
+a|
+____
+*description*
+____
+
+a|
+____
+start
+____
+
+a|
+____
+Type of the start endpoint of the range
+____
+
+a|
+____
+the start endpoint of the range
+____
+
+a|
+____
+end
+____
+
+a|
+____
+Type of the end endpoint of the range
+____
+
+a|
+____
+the end endpoint of the range
+____
+
+a|
+____
+start included
+____
+
+a|
+____
+boolean
+____
+
+a|
+____
+true if the start endpoint is included in the range
+____
+
+a|
+____
+end included
+____
+
+a|
+____
+boolean
+____
+
+a|
+____
+true if the end endpoint is included in the range
+____
+
+|===
+
+Lists are defined in *Table _68_*.
+
+.[#_Toc87279013 .anchor]##*Table 83: Context attributes and model association*
+[width="100%",cols="15%,12%,36%,37%",options="header",]
+|===
+a|
+____
+*Grammar Rule*
+____
+
+a|
+____
+*FEEL Syntax*
+____
+
+a|
+____
+*Mapped to Domain (scope s)*
+____
+
+a|
+____
+*Applicability*
+____
+
+a|
+____
+54
+____
+
+a|
+____
+_e1[e2]_
+____
+
+a|
+____
+*e1[e2]*
+____
+
+a|
+____
+*e1* is a list and *e2* is an integer (0 scale number)
+____
+
+a|
+____
+54
+____
+
+a|
+____
+_e1[e2]_
+____
+
+a|
+____
+*e 1*
+____
+
+a|
+____
+*e1* is not a list and not *null* and *value(e2)* = *1*
+____
+
+a|
+____
+54
+____
+
+a|
+____
+_e1[e2]_
+____
+
+a|
+____
+list of items *e* such that *i* is in *e* iff *i* is in *e1* and FEEL(_e2,_ *s'*) is *true*, where *s'* is the scope *s* with a special first context containing the context entry ("*item*", *i*) and if *i* is a context, the special context also contains all the context entries of *i*.
+____
+
+a|
+____
+*e1* is a list and **type(**FEEL(_e2,_ *s'*)*)* is boolean
+____
+
+a|
+____
+54
+____
+
+a|
+____
+_e1[e2]_
+____
+
+a|
+____
+*[e1]* if FEEL(_e2,_ *s'*) is *true*, where *s'* is the scope *s* with a special first context containing the context entry ("*item*", *e1*) and if *e1* is a context, the special context also contains all the context entries of *e1*. Else *[]*.
+____
+
+a|
+____
+*e1* is not a list and not *null* and **type(**FEEL(_e2,_ *s'*)*)* is boolean
+____
+
+|===
+
+Contexts are defined in *Table _69_*.
+
+.[#_Toc87279014 .anchor]##*Table 84: ContextEntry attributes and model associations*
+[width="100%",cols="18%,30%,52%",options="header",]
+|===
+a|
+____
+*Grammar Rule*
+____
+
+a|
+____
+*FEEL Syntax*
+____
+
+a|
+____
+*Mapped to Domain (scope s)*
+____
+
+| a|
+____
+_\{ n1 : e1, n2 : e2, ...}_
+____
+
+a|
+____
+*\{* "*n1*"*:* FEEL(_e1_, *s1*)*,* "*n2*"*:* FEEL(_e2_, *s2*)*, ...}* such that the *si* are all *s* with a special first context *ci* containing a
+____
+
+| a|
+____
+_\{ "n1" : e1, "n2" : e2, ...}_
+____
+
+|
+a|
+____
+57
+____
+
+| |subset of the entries of this result context. If *ci* contains +
+the entry for *nj*, then *cj* does not contain the entry for *ni*.
+a|
+____
+54
+____
+
+a|
+____
+_[e1, e2, ...]_
+____
+
+a|
+____
+*[* FEEL(_e1_)*,* FEEL(_e2_)*, ...]*
+____
+
+|===
+
+=====  Error Handling
+
+When a built-in function encounters input that is outside its defined domain, the function SHOULD report or log diagnostic information if appropriate, and SHALL return *null*.
+
+====  XML Data
+
+FEEL supports XML Data in the FEEL context by mapping XML Data into the FEEL Semantic Domain. Let XE(_e_, *p*) be a function mapping an XML element _e_ and a parent FEEL context *p* to a FEEL context , as defined in the following tables. XE makes use of another mapping function, XV(_v_), that maps an XML value _v_ to the FEEL semantic domain.
+
+XML namespace semantics are not supported by the mappings. For example, given the namespace prefix declarations _xmlns:p1= "http://example.org/foobar[[.underline]#http://example.org/foobar#]"_ and _xmlns:p2= "http://example.org/foobar[[.underline]#http://example. org/foobar#]"_, the tags _p1:myElement_ and _p2:myElement_ are the same element using XML namespace semantics but are different using XML without namespace semantics.
+
+===== Semantic mapping for XML elements (XE)
+
+*Table _70_*, _e_ is the name of an XML element, _a_ is the name of one of its attributes, _c_ is a child element, and _v_ is a value. The parent context *p* is initially empty.
+
+.[#_Toc87279015 .anchor]##*Table 85: FunctionDefinition attributes and model associations*
+[width="100%",cols="36%,33%,31%",options="header",]
+|===
+a|
+____
+*XML*
+____
+
+a|
+____
+*context entry in p*
+____
+
+a|
+____
+*Remark*
+____
+
+a|
+____
+_<e />_
+____
+
+a|
+____
+"*e*" *: null*
+____
+
+a|
+____
+empty element → *null*-valued entry in *p*
+____
+
+a|
+____
+_<q:e />_
+____
+
+a|
+____
+"*e*" *: null*
+____
+
+a|
+____
+namespaces are ignored.
+____
+
+a|
+____
+_<e>v</e>_
+____
+
+a|
+____
+"*e*"**:**XV(_v_)
+____
+
+a|
+____
+unrepeated element without attributes
+____
+
+a|
+____
+_<e>v1</e> <e>v2</e>_
+____
+
+a|
+____
+"*e*"*: [* XV(_v1_)*,* XV(_v2_) *]*
+____
+
+a|
+____
+repeating element without attributes
+____
+
+a|
+____
+_<e a="v"/>_
+____
+
+_<c1>v1</c1>_
+
+____
+_<cn>v2</cn><cn>v3</cn> </e>_
+____
+
+a|
+____
+*"e": \{ "a":* XV(_v_),
+
+*"c1":* XV(_v1_),
+
+*"cn": [* XV(_v2_), XV(_v3_) ]
+
+*}*
+____
+
+a|
+____
+An element containing attributes or child elements → context
+____
+
+a|
+____
+_<e a="v1">v2</e>_
+____
+
+a|
+____
+"*e*"*: \{* "*@a*"*:* XV(_v1_), "*$content*"*:* XV(_v2_) *}*
+____
+
+a|
+____
+_v2_ is contained in a generated $content entry
+____
+
+|===
+
+An entry in the *context entry in p* column such as *"e" : null* indicates a context entry with string key *"e"* and value *null*. The context entries are contained by context *p* that corresponds to the containing XML element, or to the XML document itself.
+
+The mapping does not replace namespace prefixes with the namespace IRIs. FEEL requires only that keys within a context be distinct, and the namespace prefixes are sufficient.
+
+===== Semantic mapping for XML values (XV)
+
+If an XML document was parsed with a schema, then some atomic values may have a datatype other than string. **Table _71_**defines how a typed XML value _v_ is mapped to FEEL.
+
+.[#_Toc87279016 .anchor]##*Table 86: List attributes and model associations*
+[width="100%",cols="43%,57%",options="header",]
+|===
+a|
+____
+*Type of _v_*
+____
+
+a|
+____
+*FEEL Semantic Domain*
+____
+
+a|
+____
+number
+____
+
+a|
+____
+FEEL(_v_)
+____
+
+a|
+____
+string
+____
+
+a|
+____
+FEEL(_"v"_)
+____
+
+a|
+____
+date
+____
+
+a|
+____
+FEEL(_date("v")_)
+____
+
+a|
+____
+dateTime
+____
+
+a|
+____
+FEEL(_date and time("v")_)
+____
+
+a|
+____
+time
+____
+
+a|
+____
+FEEL(_time("v")_)
+____
+
+a|
+____
+duration
+____
+
+a|
+____
+FEEL(duration("v"))
+____
+
+a|
+____
+list, e.g. "v1 v2"
+____
+
+a|
+____
+{empty}[ XV(v1), XV(v2) ]
+____
+
+a|
+____
+element
+____
+
+a|
+____
+XE(v)
+____
+
+|===
+
+===== XML example
+
+The following schema and instance are equivalent to the following FEEL:
+
+====== schema
+
+____
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema[[.underline]#http://www.w3.org/2001/XMLSchema#]" xmlns="http://www.example.org/[[.underline]#http://www.example.org#]"
+
+ta rgetNa mespace=" http://www.example.org/[[.underline]#http://www.example.org#]"
+
+elementFormDefault="qualified">
+
+<xsd:element name="Context">
+
+<xsd :complexType> <xsd:sequence>
+
+<xsd:element name="Employee">
+
+<xsd:complexType> <xsd:sequence>
+
+<xsd :element na me="sala ry" type="xsd :deci ma l"/>
+
+</xsd :seq uence> </xsd :complexType> </xsd:element>
+
+<xsd:element name="Customer" maxOccurs="unbounded">
+
+<xsd:complexType> <xsd:sequence>
+
+<xsd :element na me="loya lty_level" type="xsd :stri ng"/>
+
+<xsd :element na me="credit_li mit" type="xsd :decima l"/>
+
+</xsd :seq uence>
+
+</xsd :complexType>
+
+</xsd:element>
+
+</xsd:sequence> </xsd :complexType> </xsd:element>
+
+</xsd:schema>
+____
+
+====== instance
+
+<Context xmlns:tns="http://www.example.org/[[.underline]#http://www.example.org#]" +
+xmlns="http://www.example.org/[[.underline]#http://www.example.org#]">
+
+____
+<tns:Employee>
+
+<tns:salary>13000</tns:salary>
+
+</tns:Employee>
+
+<Customer>
+
+<loyalty_level>gold</loyalty_level>
+
+<credit_limit>10000</credit_limit>
+
+</Customer>
+
+<Customer>
+
+<loyalty_level>gold</loyalty_level>
+
+<credit_limit>20000</credit_limit>
+
+</Customer> <Customer> <loya lty_level>si lver</loya lty_level>
+
+<credit_limit>5000</credit_limit>
+
+</Customer>
+
+</Context>
+____
+
+====== equivalent FEEL boxed context
+
+.[#_Toc87279017 .anchor]##*Table 87: Relation attributes and model associations*
+[width="99%",cols="39%,32%,29%",options="header",]
+|===
+a|
+____
+*Context*
+____
+
+| |
+a|
+____
+Employee
+____
+
+a|
+____
+salary
+____
+
+a|
+____
+13000
+____
+
+a|
+____
+Customer
+____
+
+a|
+____
+loyalty_level
+____
+
+a|
+____
+credit_limit
+____
+
+| a|
+____
+_gold_
+____
+
+|10000
+| a|
+____
+_gold_
+____
+
+|20000
+| a|
+____
+_silver_
+____
+
+|5000
+|===
+
+When a decision model is evaluated, its input data described by an item definition such as an XML Schema element (clause 7.3.2) is bound to case data mapped to the FEEL domain. The case data can be in various formats, such as XML. We can notate case data as an equivalent boxed context, as above. Decision logic can reference entries in the context using expressions such as _Context.tns$Employee.tns$salary_, which has a value of 13000.
+
+====  Built-in functions
+
+To promote interoperability, FEEL includes a library of built-in functions. The syntax and semantics of the built-ins are required for a conformant FEEL implementation.
+
+In all of the tables in this section, a superscript refers to an additional domain constraint stated in the corresponding footnote to the table. Whenever a parameter is outside its domain, the result of the built-in is *null*.
+
+===== Conversion functions
+
+FEEL supports many conversions between values of different types. Of particular importance is the conversion from strings to dates, times, and durations. There is no literal representation for date, time, or duration. Also, formatted numbers such as _1,000.00_ must be converted from a string by specifying the grouping separator and the decimal separator.
+
+Built-ins are summarized in *Table _72_*. The first column shows the name and parameters. A question mark (_?_) denotes an optional parameter. The second column specifies the domain for the parameters. The parameter domain is specified as one of:
+
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+* {blank}
+
+____
+a type, _e.g.,_ number, stringany – any element from the semantic domain, including **null**not null – any element from the semantic domain, excluding **null**date string – a string value in the lexical space of the date datatype specified by XML Schema Part 2 Datatypes time string – eithera string value in the lexical space of the time datatype specified by XML Schema Part 2 Datatypes; or +
+a string value that is the extended form of a local time representation as specified by ISO 8601, followed by the character "@", followed by a string value that is a time zone identifier in the IANA Time Zones Database (http://www.iana.org/time-zones)[[.underline]#http://www.iana.org/time-zones)#]
+____
+
+* {blank}
+* {blank}
+
+.[#_Toc87279018 .anchor]##*Table* *88: Conditional attributes and model associations*
+[width="100%",cols="25%,21%,18%,36%",options="header",]
+|===
+a|
+____
+*Name(parameters)*
+____
+
+a|
+____
+*Parameter Domain*
+____
+
+a|
+____
+*Description*
+____
+
+a|
+____
+*Example*
+____
+
+a|
+____
+date(_from_)
+____
+
+a|
+____
+date string
+____
+
+a|
+____
+convert _from_ to a date
+____
+
+a|
+____
+_date("2012-12-25") – date("2012-12-24") = duration("P1D ")_
+____
+
+a|
+____
+date(_from_)
+____
+
+a|
+____
+date and time
+____
+
+a|
+____
+convert _from_ to a date (set time components to null)
+____
+
+a|
+____
+_date( +
+date and time("2012-12-25T1 1:00:00Z")) = date("2012-12-25")_
+____
+
+a|
+____
+date(_year_, _month_, _day_)
+____
+
+a|
+____
+_year_, _month_, _day_ are numbers
+____
+
+a|
+____
+creates a date from year, month, day component values
+____
+
+a|
+____
+_date (2012, 12, 25) = date("2012-12-25")_
+____
+
+a|
+____
+date and time(_date_, _time_)
+____
+
+a|
+____
+_date_ is a date or date time; _time_ is a time
+____
+
+a|
+____
+creates a date time from the given date (ignoring any time component) and the given time
+____
+
+a|
+____
+_date and time ("2012-12-24T23:59:00") = date and time (date("2012-12-24”), +
+time (“23:59:00"))_
+____
+
+a|
+____
+date and time(_from_)
+____
+
+a|
+____
+date time string
+____
+
+a|
+____
+convert _from_ to a date and time
+____
+
+a|
+____
+_date and time("2012-12-24T23:59:00") + duration("PT1M") = date and time("2012- 12-25T00:00:00")_
+____
+
+a|
+____
+time(_from_)
+____
+
+a|
+____
+time string
+____
+
+a|
+____
+convert _from_ to time
+____
+
+a|
+____
+_time("23:59:00z") + duration("PT2M") = time("00:01:00@Etc/UTC")_
+____
+
+a|
+____
+time(_from_)
+____
+
+a|
+____
+time, date and time
+____
+
+a|
+____
+convert _from_ to time (ignoring date components)
+____
+
+a|
+____
+_time( +
+date and time("2012-12-25T1 1:00:00Z")) = time("1 1:00:00Z")_
+____
+
+a|
+____
+time(_hour_, _minute_, _second_, _offset?_)
+____
+
+a|
+____
+_hour_, _minute_, _second_, are numbers, _offset_ is a days and time duration, or null
+____
+
+a|
+____
+creates a time from the given component values
+____
+
+a|
+____
+_time (“23:59:00z") = +
+time (23, 59, 0, duration(“PT0H”))_
+____
+
+a|
+____
+number(_from, grouping separator, decimal separator_)
+____
+
+a|
+____
+string^1^, string, string
+____
+
+a|
+____
+convert _from_ to a number
+____
+
+a|
+____
+_number("1 000,0", " ", ",") = +
+number("1,000.0", " ,", ".")_
+____
+
+a|
+____
+string(from)
+____
+
+a|
+____
+non-null
+____
+
+a|
+____
+convert from to a string
+____
+
+a|
+____
+_string(1.1) = "1.1" string(null) = null_
+____
+
+a|
+____
+duration(from)
+____
+
+a|
+____
+duration string
+____
+
+a|
+____
+convert from to a days and time or years and months duration
+____
+
+a|
+____
+_date and time("2012-12-24T23:59:00") - date and time("2012-12-22T03:45:00") = duration("P2DT20H14M")_
+
+_duration("P2Y2M") = duration("P26M")_
+____
+
+a|
+____
+years and months duration(from, to)
+____
+
+a|
+____
+both are date or both are date and time
+____
+
+a|
+____
+return years and months duration between from and to
+____
+
+a|
+____
+_years and months duration (date("201 1-12-22"), date("2013-08-24") ) = duration("P1Y8M")_
+____
+
+|===
+
+____
+{empty}1. _grouping_ SHALL be one of space (' '), comma (','), period ('.'), or null. +
+_decimal_ SHALL be one of period, comma, or null, but SHALL NOT be the same as the grouping separator unless both are null. +
+_from_ SHALL conform to grammar rule 37, after removing all occurrences of the grouping separator, if any, and after changing the decimal separator, if present, to a period.
+____
+
+===== Boolean function
+
+*Table _73_* defines Boolean functions.
+
+.[#_Toc87279019 .anchor]##*Table* *89: ChildExpression attributes and model associations*
+[width="100%",cols="25%,17%,22%,36%",options="header",]
+|===
+a|
+____
+*Name(parameters)*
+____
+
+a|
+____
+*Parameter Domain*
+____
+
+a|
+____
+*Description*
+____
+
+a|
+____
+*Example*
+____
+
+a|
+____
+not(_negand_)
+____
+
+a|
+____
+boolean
+____
+
+a|
+____
+logical negation
+____
+
+a|
+____
+_not(true) = false not(null) = null_
+____
+
+|===
+
+===== String functions
+
+*Table _74_* defines string functions.
+
+.[#_Toc87279020 .anchor]##*Table* *90: Filter attributes and model associations*
+[width="100%",cols="22%,17%,21%,40%",options="header",]
+|===
+a|
+____
+*Name(parameters)*
+____
+
+a|
+____
+*Parameter Domain*
+____
+
+a|
+____
+*Description*
+____
+
+a|
+____
+*Example*
+____
+
+a|
+____
+substring(_string, start position, length?_)
+____
+
+a|
+____
+string, number^1^
+____
+
+a|
+____
+return _length_ (or all) characters in _string_, starting at _start position_. 1st position is 1, last position is -1
+____
+
+a|
+____
+_substring("foobar",3) = "obar" substring("foobar",3,3) = "oba" substring("foobar", -2, 1) = "a"_
+
+_substring("\U01F40Eab", 2) = "ab" where "\U01F40Eab" is the representation of 🐎**ab**_
+____
+
+a|
+____
+string length(string)
+____
+
+a|
+____
+string
+____
+
+a|
+____
+return number of characters (or code points) in string.
+____
+
+a|
+____
+_string length("foo") = 3 +
+string length("\U01F40Eab") = 3_
+____
+
+a|
+____
+upper case(string)
+____
+
+a|
+____
+string
+____
+
+a|
+____
+return uppercased string
+____
+
+a|
+____
+_upper case("aBc4") = "ABC4"_
+____
+
+a|
+____
+lower case(string)
+____
+
+a|
+____
+string
+____
+
+a|
+____
+return lowercased string
+____
+
+a|
+____
+_lower case("aBc4") = "abc4"_
+____
+
+a|
+____
+substring before (string, match)
+____
+
+a|
+____
+string, string
+____
+
+a|
+____
+return substring of string before the match in string
+____
+
+a|
+____
+_Substring before("foobar","bar") = "foo" substring before("foobar","xyz") = ""_
+____
+
+a|
+____
+substring after +
+(string, match)
+____
+
+a|
+____
+string, string
+____
+
+a|
+____
+return substring of string after the match in string
+____
+
+a|
+____
+_substring after("foobar", "ob") = "ar" substring after("", "a") = ""_
+____
+
+a|
+____
+replace(input, pattern, replacement, flags?)
+____
+
+a|
+____
+string2
+____
+
+a|
+____
+regular expression pattern matching and replacement
+____
+
+a|
+____
+_replace("banana","a","o") = "bonono"_
+
+_replace("abcd",_ _"(ab)|(a)", "[1=$1][2=$2]") = "[1=ab][2=]cd"_
+____
+
+a|
+____
+contains(string, match)
+____
+
+a|
+____
+string
+____
+
+a|
+____
+does the string contain the match?
+____
+
+a|
+____
+_contains("foobar", "of") = false_
+____
+
+a|
+____
+starts with(string, match)
+____
+
+a|
+____
+string
+____
+
+a|
+____
+does the string start with the match?
+____
+
+a|
+____
+_starts with("foobar", "fo") = true_
+____
+
+a|
+____
+ends with( string, match)
+____
+
+a|
+____
+string
+____
+
+a|
+____
+does the string end with the match?
+____
+
+a|
+____
+_ends with("foobar", "r") = true_
+____
+
+a|
+____
+matches(input, pattern, flags?)
+____
+
+a|
+____
+string2
+____
+
+a|
+____
+does the input match the regexp pattern?
+____
+
+a|
+____
+_matches("foobar", "^fo*b") = true_
+____
+
+a|
+____
+split( string, delimiter )
+____
+
+a|
+____
+_string_ is a string, _delimiter_ is a pattern2
+____
+
+a|
+____
+Splits the string into a list of substrings, breaking at each occurrence of the delimiter pattern.
+____
+
+a|
+____
+_split( “John Doe”, “\\s” ) = [“John”, “Doe”] split( “a;b;c;;”, “;” ) = [“a”,”b”,”c”,””,””]_
+____
+
+a|
+____
+string join(list, delimiter)
+____
+
+a|
+____
+_list_ is a list of strings, _delimiter_ is a string
+____
+
+a|
+____
+return a string which is composed by joining all the string elements from the list parameter, separated by the delimiter. +
+The delimiter can be an empty string. +
+Null elements in the list parameter are ignored. +
+If *_list_* is empty, the result is the empty string. +
+If *_delimiter_* is null, the string elements are joined without a separator.
+____
+
+a|
+____
+_string join(["a","b","c"], "_and_") = "a_and_b_and_c"_
+
+_string join(["a","b","c"], "") = "abc"_
+
+_string join(["a","b","c"], null) = "abc"_
+
+_string join(["a"], "X") = "a"_
+
+_string join(["a",null,"c"], "X") = "aXc"_
+
+_string join([], "X") = ""_
+____
+
+a|
+____
+string join(list)
+____
+
+a|
+____
+_list_ is a list of strings
+____
+
+a|
+____
+return a string which is composed by joining all the string elements from the list parameter +
+Null elements in the list parameter are ignored. +
+If *_list_* is empty, the result is the empty string.
+____
+
+a|
+____
+_string join(["a","b","c"]) = "abc"_
+
+_string join(["a",null,"c"]) = "ac"_
+
+_string join([]) = ""_
+____
+
+|===
+
+[arabic]
+. {blank}
+. {blank}
+
+_start position_ must be a non-zero integer (0 scale number) in the range [-L..L], where L is the length of the string. _length_ must be in the range [1 ..E], where E is L – _start position_ + 1 if _start position_ is positive, and _–start position_ otherwise._pattern_, _replacement_, and _flags_ SHALL conform to the syntax and constraints specified in clause 7.6 of XQuery 1.0 and XPath 2.0 Functions and Operators. Note that where XPath specifies an error result, FEEL specifies a null result.
+
+===== List functions
+
+*Table _75_* defines list functions.
+
+.[#_Toc87279021 .anchor]##*Table* *91: Iterator attributes and model associations*
+[width="100%",cols="25%,17%,31%,27%",options="header",]
+|===
+a|
+____
+*Name(parameters)*
+____
+
+a|
+____
+*Parameter Domain*
+____
+
+a|
+____
+*Description*
+____
+
+a|
+____
+*Example*
+____
+
+a|
+____
+list contains(_list, element_)
+____
+
+a|
+____
+list, any element of the semantic domain including *null*
+____
+
+a|
+____
+does the _list_ contain the _element_?
+____
+
+a|
+____
+_list contains([1,2,3], 2) = true_
+____
+
+a|
+____
+count(_list_)
+____
+
+a|
+____
+list
+____
+
+a|
+____
+return size of _list_, or zero if _list_ is empty
+____
+
+a|
+____
+_count([1,2,3]) = 3 count([]) = 0 count([1,[2,3]]) = 2_
+____
+
+a|
+____
+min(_list_) +
+min(_c1,..., cN_), _N_ >0 max(_list_) +
+max(_c1,..., cN_), _N_ >0
+____
+
+a|
+____
+non-empy list of comparable items or argument list of one or more comparable items
+____
+
+a|
+____
+return minimum(maximum) item, or *null* if _list_ is empty
+____
+
+a|
+____
+_min([1,2,3]) = 1 +
+max(1,2,3) = 3 +
+min(1) = min([1]) = 1 max([]) = null_
+____
+
+a|
+____
+sum(_list_) +
+sum(_n1,..., nN_), _N_ >0
+____
+
+a|
+____
+list of 0 or more numbers or argument list of one or more numbers
+____
+
+a|
+____
+return sum of numbers, or *null* if _list_ is empty
+____
+
+a|
+____
+_sum([1,2,3]) = 6 sum(1,2,3) = 6 sum(1) = 1 +
+sum([]) = *null*_
+____
+
+a|
+____
+mean(_list_) +
+mean(_n1,..., nN_), _N_ >0
+____
+
+a|
+____
+non-empty list of numbers or argument list of one or more numbers
+____
+
+a|
+____
+return arithmetic mean (average) of numbers
+____
+
+a|
+____
+_mean ([1,2,3]) = 2 mean(1,2,3) = 2 mean(1) = 1 mean([]) = null_
+____
+
+a|
+____
+all(_list_) +
+all(_b1,..., bN_), _N_ >0
+____
+
+a|
+____
+list of Boolean items or argument list of one or more Boolean items
+____
+
+a|
+____
+return _false_ if any item is _false_, else _true_ if empty or all items are _true_, else _null_
+____
+
+|_all([false,null,true]) = false +
+all(true) = all([true]) = true +
+all([]) = true +
+all(0) = null_
+a|
+____
+any(_list_) +
+any(_b1,..., bN_), _N_ >0
+____
+
+a|
+____
+list of Boolean items or argument list of one or more Boolean items
+____
+
+a|
+____
+return _true_ if any item is _true_, else _false_ if empty or all items are _false_, else _null_
+____
+
+a|
+____
+_any([false,null,true]) = true any(false) = false +
+any([]) = false +
+any(0) = null_
+____
+
+a|
+____
+sublist(_list, start position, length?_)
+____
+
+a|
+____
+list, number^1^, number^2^
+____
+
+a|
+____
+return list of _length_ (or all) elements of _list,_ starting with _list[start position]_. 1st position is 1, last position is -1
+____
+
+a|
+____
+_sublist([4,5,6], 1, 2) = [4,5]_
+____
+
+a|
+____
+append(_list, item..._)
+____
+
+a|
+____
+list, any element including *null*
+____
+
+a|
+____
+return new _list_ with __item__s appended
+____
+
+a|
+____
+_append([1], 2, 3) = [1,2,3]_
+____
+
+a|
+____
+concatenate(_list..._)
+____
+
+a|
+____
+list
+____
+
+a|
+____
+return new _list_ that is a concatenation of the arguments
+____
+
+a|
+____
+_concatenate([1,2],[3]) = [1,2,3]_
+____
+
+a|
+____
+insert before(_list, position, newItem_)
+____
+
+a|
+____
+list, number^1^, any element including *null*
+____
+
+a|
+____
+return new _list_ with _newItem_ inserted at _position_
+____
+
+a|
+____
+_insert before ([1 ,3], 1,2) = [2,1,3]_
+____
+
+a|
+____
+remove(_list, position_)
+____
+
+a|
+____
+list, number^1^
+____
+
+a|
+____
+_list_ with item at _position_ removed
+____
+
+a|
+____
+_remove ([1 ,2,3], 2) = [1,3]_
+____
+
+a|
+____
+reverse(_list_)
+____
+
+a|
+____
+list
+____
+
+a|
+____
+reverse the _list_
+____
+
+a|
+____
+_reverse ([1 ,2,3]) = [3,2,1]_
+____
+
+a|
+____
+index of(_list, match_)
+____
+
+a|
+____
+list, any element including *null*
+____
+
+a|
+____
+return ascending list of _list_ positions containing _match_
+____
+
+a|
+____
+_index of([1,2,3,2],2) = [2,4]_
+____
+
+a|
+____
+union(_list..._)
+____
+
+a|
+____
+list
+____
+
+a|
+____
+concatenate with duplicate removal
+____
+
+a|
+____
+_union ([1,2],[2,3]) = [1,2,3]_
+____
+
+a|
+____
+distinct values(_list_)
+____
+
+a|
+____
+list
+____
+
+a|
+____
+duplicate removal
+____
+
+a|
+____
+_distinct values([1,2,3,2, 1]) = [1,2,3]_
+____
+
+a|
+____
+flatten(_list_)
+____
+
+a|
+____
+list
+____
+
+a|
+____
+flatten nested lists
+____
+
+a|
+____
+_flatten ([[1 ,2],[[3]], 4]) = [1,2,3,4]_
+____
+
+a|
+____
+product( _list_ ) product( _n~1~, ..., n~n~_)
+____
+
+a|
+____
+_list_ is a list of numbers. _n~1~ ... n~n~_ are numbers.
+____
+
+a|
+____
+Returns the product of the numbers
+____
+
+a|
+____
+_product([2, 3, 4]) = 24_
+
+_product([]) = null_
+
+_product(2, 3, 4) = 24_
+____
+
+a|
+____
+median( _list_ ) median( _n~1~, ..., n~n~_ )
+____
+
+a|
+____
+_list_ is a list of number. _n~1~ ... n~n~_ are numbers.
+____
+
+a|
+____
+Returns the median element of the list of numbers. I.e., after sorting the list, if the list has an odd number of elements, it returns the middle element. If the list has an even number of elements, returns the average of the two middle elements. If the list is empty, returns null.
+____
+
+a|
+____
+_median( 8, 2, 5, 3, 4 ) = 4 median( [6, 1, 2, 3] ) = 2.5 median( [ ] ) = null_
+____
+
+a|
+____
+stddev( _list_ ) stddev( _n~1~, ..., n~n~_ )
+____
+
+a|
+____
+_list_ is a list of number. _n~1~ ... n~n~_ are numbers.
+____
+
+a|
+____
+Returns the *sample standard deviation* of the list of numbers. If the _list_ is empty or if the _list_ contains only one element, the function returns null.
+____
+
+a|
+____
+_stddev( 2, 4, 7, 5 ) = 2.08166599946613273528229 7706979931 +
+stddev( [ 47 ] ) = null +
+stddev( 47 ) = null_
+
+_stddev( [ ] ) = null_
+____
+
+a|
+____
+mode( _list_ ) mode( _n~1~, ..., n~n~_ )
+____
+
+a|
+____
+_list_ is a list of number. _n~1~ ... n~n~_ are numbers.
+____
+
+a|
+____
+Returns the mode of the list of numbers. If the result contains multiple elements, they are returned in ascending order. If the list is empty, an empty list is returned.
+____
+
+a|
+____
+_mode( 6, 3, 9, 6, 6 ) = [ 6 ] mode( [6, 1, 9, 6, 1] ) = [ 1, 6 ] mode( [ ] ) = [ ]_
+____
+
+|===
+
+[arabic]
+. {blank}
+. {blank}
+
+_position_ must be a non-zero integer (0 scale number) in the range [-L..L], where L is the length of the list__length__ must be in the range [1 ..E], where E is L – _start position_ + 1 if _start position_ is positive, and _–start position_ otherwise.
+
+===== Numeric functions
+
+*Table _76_* defines numeric functions.
+
+.[#_Toc87279022 .anchor]##*Table* *92: For attributes and model associations*
+[width="99%",cols="20%,25%,26%,29%",options="header",]
+|===
+a|
+____
+*Name(parameters)*
+____
+
+a|
+____
+*Parameter Domain*
+____
+
+a|
+____
+*Description*
+____
+
+a|
+____
+*Example*
+____
+
+a|
+____
+decimal(_n, scale_)
+____
+
+a|
+____
+number, number^1^
+____
+
+a|
+____
+return _n_ with given _scale_
+____
+
+a|
+____
+_decimal(1/3, 2) = .33 +
+decimal(1.5, 0) = 2 +
+decimal(2. 5, 0) = 2_
+____
+
+| | | |
+| | | |
+a|
+____
+floor(_n_)
+
+floor(_n_, _scale_)
+____
+
+a|
+____
+number
+
+number, number1
+____
+
+a|
+____
+Return n with given scale and rounding mode flooring.
+
+If at least one of n or scale is *null* the result is *null*.
+
+For floor(n) the scale is 0
+____
+
+|_floor(1.5) = 1 +
+floor(-1.56, 1) = -1.6_
+a|
+____
+ceiling(_n_)
+
+ceiling(_n_, _scale_)
+____
+
+a|
+____
+number
+
+number, number1
+____
+
+a|
+____
+Return n with given scale and rounding mode ceiling.
+
+If at least one of n or scale is *null* the result is *null*.
+
+For ceiling(n) the scale is 0
+____
+
+|_ceiling(1.5) = 2 +
+ceiling(-1.56, 1) = -1.5_
+a|
+____
+round up(_n_, _scale_)
+____
+
+a|
+____
+number, number1
+____
+
+a|
+____
+Return n with given scale and rounding mode round up.
+
+If at least one of n or scale is *null* the result is *null*.
+____
+
+|_round up(5.5, 0) = 6_ _ +
+round up(-5.5, 0) = -6_ _ +
+round up(1.121, 2) = 1.13 +
+round up(-1.126, 2) = -1.13_
+a|
+____
+round down(_n_, _scale_)
+____
+
+a|
+____
+number, number1
+____
+
+a|
+____
+Return n with given scale and rounding mode round down.
+
+If at least one of n or scale is *null* the result is *null*.
+____
+
+|_round down(5.5, 0) = 5_ _ +
+round down (-5.5, 0) = -5_ _ +
+round down (1.121, 2) = 1.12 +
+round down (-1.126, 2) = -1.12_
+a|
+____
+round half up(_n_, _scale_)
+____
+
+a|
+____
+number, number1
+____
+
+a|
+____
+Return n with given scale and rounding mode round half up.
+
+If at least one of n or scale is *null* the result is *null*.
+____
+
+|_round half up(5.5, 0) = 6_ _ +
+round half up(-5.5, 0) = -6_ _ +
+round half up(1.121, 2) = 1.12 +
+round half up(-1.126, 2) = -1.13_
+a|
+____
+round half down(_n_, _scale_)
+____
+
+a|
+____
+number, number1
+____
+
+a|
+____
+Return n with given scale and rounding mode round up.
+
+If at least one of n or scale is *null* the result is *null*.
+____
+
+|_round half down (5.5, 0) = 5_ _ +
+round half down (-5.5, 0) = -5_ _ +
+round half down (1.121, 2) = 1.12 +
+round half down (-1.126, 2) = -1.13_
+a|
+____
+abs( _n_ )
+____
+
+a|
+____
+__n i__s a number, a days and time duration or a year and month duration
+____
+
+a|
+____
+Returns the absolute value of _n_.
+____
+
+a|
+____
+_abs( 10 ) = 10 +
+abs( -10 ) = 10 +
+abs(@”PT5H”) = @”PT5H” +
+abs(@”-PT5H”) = @”PT5H”_
+____
+
+a|
+____
+modulo( _dividend_, _divisor_ )
+____
+
+a|
+____
+_dividend_ and _divisor_ are numbers, where _divisor_ must not be 0 (zero). Returns the remainder of the division of _dividend_ by _divisor_. In case either _dividend_ or _divisor_ is negative, the result has the same sign of the _divisor_. The modulo function can be expressed as follows:
+
+modulo (dividend, divisor) = dividend - divisor*floor (dividen d/divisor).
+____
+
+a|
+____
+Returns the remainder of the division of dividend by divisor.
+____
+
+a|
+____
+_modulo( 12, 5 ) = 2 +
+modulo(-12,5)= 3 +
+modulo(12,-5)= -3 +
+modulo(-12,-5)= -2 modulo(10. 1, 4.5)= 1.1 modulo(-10.1, 4.5)= 3.4 modulo(10.1, -4.5)= -3.4 modulo(-10.1, -4.5)= -1.1_
+____
+
+a|
+____
+sqrt( _number_ )
+____
+
+a|
+____
+_number_ is a number.
+____
+
+a|
+____
+Returns the square root of the given number. If _number_ is negative it returns null.
+____
+
+a|
+____
+_sqrt( 16 ) = 4_
+____
+
+a|
+____
+log( _number_ )
+____
+
+a|
+____
+_number_ is a number
+____
+
+a|
+____
+Returns the natural logarithm (base _e_) of the _number_ parameter.
+____
+
+a|
+____
+_log( 10 ) = 2.30258509299_
+____
+
+a|
+____
+exp( _number_ )
+____
+
+a|
+____
+_number_ is a number
+____
+
+a|
+____
+Returns the Euler’s number _e_ raised to the power of _number_.
+____
+
+a|
+____
+_exp( 5 ) = 148.413159102577_
+____
+
+a|
+____
+odd( _number_ )
+____
+
+a|
+____
+_number_ is a number
+____
+
+a|
+____
+Returns true if _number_ is odd, false if it is even.
+____
+
+a|
+____
+__odd( 5 ) = true +
+__odd( 2 ) = _false_
+____
+
+a|
+____
+even( _number_ )
+____
+
+a|
+____
+_number_ is a number
+____
+
+a|
+____
+Returns true if _number_ is even, false if it is odd.
+____
+
+|__even( 5 ) = false +
+__even ( 2 ) = _true_
+|===
+
+{empty}1. Scale is in the range [−6111 ..6176]
+
+===== Date and time functions
+
+*Table _77_* defines date and time functions.
+
+.[#_Toc87279023 .anchor]##*Table* *93: Quantified attributes and model associations*
+[width="100%",cols="27%,24%,24%,25%",options="header",]
+|===
+a|
+____
+*Name(parameters)*
+____
+
+a|
+____
+*Parameter Domain*
+____
+
+a|
+____
+*Description*
+____
+
+a|
+____
+*Example*
+____
+
+a|
+____
+is(_value1_, _value2_)
+____
+
+a|
+____
+Both are elements of the *D*
+____
+
+a|
+____
+Returns *true* if both values are the same element in the FEEL semantic domain *D* (see 10.3.2.2)
+____
+
+a|
+____
+_is(date("2012-12-25"), time("23:00:50”))_ is *false*
+
+_is(date("2012-12-25"), date("2012-12-25"))_ is *true*
+
+_is(time("23:00:50z"), time("23:00:50”))_ is *false*
+
+_is(time("23:00:50z"), time("23:00:50+00:00”))_ is *true*
+____
+
+|===
+
+===== Range Functions
+
+The following set of functions establish relationships between single scalar values and ranges of such values. All functions in this list take two arguments and return True if the relationship between the argument holds, or False otherwise.
+
+The specification of these functions is heavily inspired by the equivalent functions in the HL7 CQL (Clinical Quality Language) standard version 1.4.
+
+The following table intuitively depicts the relationships defined by the functions in this chapter, but the full semantics of the functions are listed in
+
+*Table _78_*.
+
+image:extracted-media/media/image100.png[image,width=615,height=392]
+
+.[#_Toc87279024 .anchor]##*Table 94: DMNDI attributes*
+[width="100%",cols="34%,33%,33%",options="header",]
+|===
+a|
+____
+*Name(parameters)*
+____
+
+a|
+____
+*Evaluates to true if and only if (for each signature, respectively)*
+____
+
+a|
+____
+*Example*
+____
+
+a|
+____
+{empty}(a) before(_point1_, _point2_)
+____
+
+a|
+____
+{empty}(a) +
+point1 < point2
+____
+
+a|
+____
+before( 1, 10 ) = true +
+before( 10, 1 ) = false
+____
+
+a|
+____
+{empty}(b) before(_point_, _range_)
+____
+
+a|
+____
+{empty}(b) +
+point < range.start +
+or +
+(point = range.start +
+and +
+not(range.start included) )
+____
+
+a|
+____
+before( 1, [1.. 10] ) = false +
+before( 1, (1..10] ) = true +
+before( 1, [5.. 10] ) = true
+____
+
+a|
+____
+{empty}(c) before(_range_, _point_)
+____
+
+a|
+____
+{empty}(c) +
+range.end < point +
+or +
+(range.end = point +
+and +
+not(range.end included) )
+____
+
+a|
+____
+before( [1..10], 10 ) = false +
+before( [1..10), 10 ) = true +
+before( [1..10], 15 ) = true
+____
+
+a|
+____
+{empty}(d) before(_range1_,_range2_)
+____
+
+a|
+____
+{empty}(d) +
+range 1 .end < range2.start +
+or +
+(( not(range1 .end included) +
+or +
+not(range2.start included)) +
+and +
+range 1 .end = range2.start)
+____
+
+a|
+____
+before( [1..10], [15..20] ) = true +
+before( [1..10], [10..20] ) = false +
+before( [1..10), [10..20] ) = true +
+before( [1..10], (10..20] ) = true
+____
+
+a|
+____
+{empty}(a) after(_point1_, _point2_)
+____
+
+a|
+____
+{empty}(a) +
+point1 > point2
+____
+
+a|
+____
+after( 10, 5 ) = true +
+after( 5, 10 ) = false
+____
+
+a|
+____
+{empty}(b) after(_point_, _range_)
+____
+
+a|
+____
+{empty}(b) +
+point > range.end +
+or +
+(point = range.end +
+and +
+not(range.end included) )
+____
+
+a|
+____
+after( 12, [1..10] ) = true +
+after( 10, [1..10) ) = true +
+after( 10, [1..10] ) = false
+____
+
+a|
+____
+{empty}(c) after(range, point)
+____
+
+a|
+____
+{empty}(c) +
+range.start > point +
+or +
+(range.start = point +
+and +
+not(range.start included) )
+____
+
+a|
+____
+after( [11..20], 12 ) = false +
+after( [11 ..20], 10 ) = true +
+after( (11..20], 11 ) = true +
+after( [11 ..20], 11 ) = false
+____
+
+a|
+____
+{empty}(d) after(_range1_, _range2_)
+____
+
+a|
+____
+{empty}(d) +
+range 1 .start > range2.end +
+or +
+(( not(range1 .start included) +
+or +
+not(range2.end included) ) +
+and +
+range 1 .start = range2.end)
+____
+
+a|
+____
+after( [11..20], [1..10] ) = true +
+after( [1 ..1 0], [11 ..20] ) = false +
+after( [11 ..20], [1.. 11) ) = true +
+after( (11..20], [1..11] ) = true
+____
+
+a|
+____
+{empty}(a) meets(_range1_, _range2_)
+____
+
+a|
+____
+(a)
+
+range1.end included
+
+and
+
+range2.start included
+
+and
+
+range 1 .end = range2.start
+____
+
+a|
+____
+meets( [1..5], [5..10] ) = true meets( [1..5), [5..10] ) = false meets( [1..5], (5..10] ) = false meets( [1..5], [6..10] ) = false
+____
+
+a|
+____
+{empty}(a) met by(_range1_, _range2_)
+____
+
+a|
+____
+(a)
+
+range1.start included
+
+and
+
+range2.end included
+
+and
+
+range 1 .start = range2.end
+____
+
+a|
+____
+met by( [5..10], [1..5] ) = true met by( [5..10], [1..5) ) = false met by( (5..10], [1..5] ) = false met by( [6..10], [1..5] ) = false
+____
+
+a|
+____
+{empty}(a) overlaps(_range1_, _range2_)
+____
+
+a|
+____
+(a)
+
+(range1.end > range2.start
+
+or
+
+(range1.end = range2.start
+
+and
+
+range1.end included
+
+and
+
+range2.start included))
+
+and
+
+(range1.start < range2.end
+
+or
+
+(range1.start = range2.end
+
+and
+
+range1.start included
+
+and
+
+range2.end included))
+____
+
+a|
+____
+overlaps( [1..5], [3..8] ) = true overlaps( [3..8], [1 ..5] ) = true overlaps( [1 ..8], [3..5] ) = true overlaps( [3..5], [1 ..8] ) = true overlaps( [1 ..5], [6..8] ) = false overlaps( [6..8], [1 ..5] ) = false overlaps( [1 ..5], [5..8] ) = true overlaps( [1 ..5], (5..8] ) = false overlaps( [1 ..5), [5..8] ) = false overlaps( [1 ..5), (5. .8] ) = false overlaps( [5..8], [1 ..5] ) = true overlaps( (5..8], [1 ..5] ) = false overlaps( [5..8], [1 ..5) ) = false overlaps( (5..8], [1 ..5) ) = false
+____
+
+a|
+____
+{empty}(a) overlaps before(_range1_, _range2_)
+____
+
+a|
+____
+(a)
+____
+
+(range1.start < range2.start
+
+or
+
+(range1.start = range2.start
+
+and
+
+range1.start included
+
+and
+
+not(range2.start included)))
+
+and
+
+(range1.end > range2.start
+
+or
+
+(range1.end = range2.start
+
+and
+
+range1.end included
+
+and
+
+range2.start included))
+
+and
+
+(range1.end < range2.end
+
+or
+
+(range1.end = range2.end
+
+and
+
+(not(range1.end included)
+
+or
+
+range2.end included )))
+
+a|
+____
+overlaps before( [1 ..5], [3..8] ) = true overlaps before( [1 ..5], [6..8] ) = false overlaps before( [1 ..5], [5..8] ) = true overlaps before( [1 ..5], (5..8] ) = false overlaps before( [1 ..5), [5..8] ) = false overlaps before( [1 ..5), (1. .5] ) = true overlaps before( [1 ..5], (1 ..5] ) = true +
+overlaps before( [1 ..5), [1 ..5] ) = false +
+overlaps before( [1 ..5], [1 ..5] ) = false
+____
+
+|(a) overlaps after(_range1_, _range2_) a|
+____
+{empty}(a) +
+(range2.start < range1.start +
+or +
+(range2.start = range1.start +
+and +
+range2.start included +
+and +
+not( range 1.start included))) +
+and +
+(range2.end > range 1.start +
+or +
+(range2.end = range 1.start +
+and +
+range2.end included +
+and +
+range 1.start included )) +
+and +
+(range2.end < range1.end +
+or +
+(range2.end = range1.end +
+and +
+(not(range2.end included) +
+or +
+range1.end included)))
+____
+
+a|
+____
+overlaps after( [3..8], [1 ..5]) = true +
+overlaps after( [6..8], [1 ..5]) = false +
+overlaps after( [5..8], [1 ..5]) = true +
+overlaps after( (5..8], [1 ..5]) = false +
+overlaps after( [5..8], [1 ..5)) = false +
+overlaps after( (1 ..5], [1 ..5) ) = true +
+overlaps after( (1 ..5], [1 ..5] ) = true +
+overlaps after( [1 ..5], [1 ..5) ) = false +
+overlaps after( [1 ..5], [1 ..5] ) = false
+____
+
+a|
+____
+{empty}(a) finishes(_point, range_)
+____
+
+a|
+____
+{empty}(a) +
+range.end included +
+and +
+range.end = point
+____
+
+a|
+____
+finishes( 10, [1..10] ) = true +
+finishes( 10, [1..10) ) = false
+____
+
+a|
+____
+{empty}(b) finishes(_range1_, _range2_)
+____
+
+a|
+____
+{empty}(b) +
+range1.end included = range2.end included +
+and +
+range1.end = range2.end +
+and +
+(range1.start > range2.start +
+or +
+(range1.start = range2.start +
+and +
+(not(range1.start included) +
+or +
+range2.start included)))
+____
+
+a|
+____
+finishes( [5..10], [1..10] ) = true +
+finishes( [5..10), [1..10] ) = false +
+finishes( [5..10), [1..10) ) = true +
+finishes( [1..10], [1..10] ) = true +
+finishes( (1..10], [1..10] ) = true
+____
+
+a|
+____
+{empty}(a) finished by(_range, point_)
+____
+
+a|
+____
+{empty}(a) +
+range.end included +
+and +
+range.end = point
+____
+
+a|
+____
+finished by( [1..10], 10 ) = true +
+finished by( [1..10), 10 ) = false
+____
+
+a|
+____
+{empty}(b) finished by(_range1_, _range2_)
+____
+
+a|
+____
+{empty}(b) +
+range1.end included = range2.end included +
+and +
+range1.end = range2.end +
+and +
+(range1.start < range2.start +
+or +
+(range1.start = range2.start +
+and +
+(range1.start included +
+or +
+not(range2.start included))))
+____
+
+a|
+____
+finished by( [1..10], [5..10] ) = true +
+finished by( [1..10], [5..10) ) = false +
+finished by( [1..10), [5..10) ) = true +
+finished by( [1..10], [1..10] ) = true +
+finished by( [1..10], (1..10] ) = true
+____
+
+a|
+____
+{empty}(a) includes(_range_, _point_)
+____
+
+a|
+____
+{empty}(a) +
+(range.start < point and range.end > point) +
+or +
+(range.start = point and range.start included) +
+or +
+(range.end = point and range.end included)
+____
+
+a|
+____
+includes( [1..10], 5 ) = true +
+includes( [1..10], 12 ) = false +
+includes( [1..10], 1 ) = true +
+includes( [1..10], 10 ) = true +
+includes( (1..10], 1 ) = false +
+includes( [1..10), 10 ) = false
+____
+
+a|
+____
+{empty}(b) includes(_range1_, _range2_)
+____
+
+a|
+____
+{empty}(b) +
+(range1.start < range2.start +
+or +
+(range1.start = range2.start +
+and +
+(range1.start included +
+or +
+not(range2.start included)))) +
+and +
+(range1.end > range2.end +
+or +
+(range1.end = range2.end +
+and +
+(range1.end included +
+or +
+not(range2.end included))))
+____
+
+a|
+____
+includes( [1..10], [4..6] ) = true +
+includes( [1..10], [1..5] ) = true +
+includes( (1..10], (1..5] ) = true +
+includes( [1..10], (1..10) ) = true +
+includes( [1..10), [5..10) ) = true +
+includes( [1..10], [1..10) ) = true +
+includes( [1..10], (1..10] ) = true +
+includes( [1..10], [1..10] ) = true
+____
+
+a|
+____
+{empty}(a) during(_point_, _range_)
+____
+
+a|
+____
+{empty}(a) +
+(range.start < point and range.end > point) +
+or +
+(range.start = point and range.start included) +
+or +
+(range.end = point and range.end included)
+____
+
+a|
+____
+during( 5, [1..10] ) = true +
+during( 12, [1..10] ) = false +
+during( 1, [1..10] ) = true +
+during( 10, [1..10] ) = true +
+during( 1, (1..10] ) = false +
+during( 10, [1..10) ) = false
+____
+
+a|
+____
+{empty}(b) during(_range1_, _range2_)
+____
+
+a|
+____
+{empty}(b) +
+(range2.start < range1.start +
+or +
+(range2.start = range1.start +
+and +
+(range2.start included +
+or +
+not(range1.start included)))) +
+and +
+(range2.end > range1.end +
+or +
+(range2.end = range1.end +
+and +
+(range2.end included +
+or +
+not(range1.end included))))
+____
+
+a|
+____
+during( [4..6], [1..10] ) = true +
+during( [1..5], [1..10] ) = true +
+during( (1..5], (1..10] ) = true +
+during( (1..10), [1..10] ) = true +
+during( [5..10), [1..10) ) = true +
+during( [1..10), [1..10] ) = true +
+during( (1..10], [1..10] ) = true +
+during( [1..10], [1..10] ) = true
+____
+
+a|
+____
+{empty}(a) starts(_point_, _range_)
+____
+
+a|
+____
+{empty}(a) +
+range.start = point +
+and +
+range.start included
+____
+
+a|
+____
+starts( 1, [1..10] ) = true +
+starts( 1, (1..10] ) = false +
+starts( 2, [1..10] ) = false
+____
+
+a|
+____
+{empty}(b) starts(_range1_, _range2_)
+____
+
+a|
+____
+{empty}(b) +
+range1.start = range2.start +
+and +
+range1.start included = range2.start included +
+and +
+(range1.end < range2.end +
+or +
+(range1.end = range2.end +
+and +
+(not(range1.end included) +
+or +
+range2.end included)))
+____
+
+a|
+____
+starts( [1..5], [1..10] ) = true +
+starts( (1..5], (1..10] ) = true +
+starts( (1..5], [1..10] ) = false +
+starts( [1..5], (1..10] ) = false +
+starts( [1..10], [1..10] ) = true +
+starts( [1..10), [1..10] ) = true +
+starts( (1..10), (1..10) ) = true
+____
+
+a|
+____
+{empty}(a) started by(_range_, _point_)
+____
+
+a|
+____
+{empty}(a) +
+range.start = point +
+and +
+range.start included
+____
+
+a|
+____
+started by( [1..10], 1 ) = true +
+started by( (1..10], 1 ) = false +
+started by( [1..10], 2 ) = false
+____
+
+a|
+____
+{empty}(b) started by(_range1_, _range2_)
+____
+
+a|
+____
+{empty}(b) +
+range1.start = range2.start +
+and +
+range1.start included = range2.start included +
+and +
+(range2.end < range1.end +
+or +
+(range2.end = range1.end +
+and +
+(not(range2.end included) +
+or +
+range1.end included)))
+____
+
+a|
+____
+started by( [1..10], [1..5] ) = true +
+started by( (1..10], (1..5] ) = true +
+started by( [1..10], (1..5] ) = false +
+started by( (1..10], [1..5] ) = false +
+started by( [1..10], [1..10] ) = true +
+started by( [1..10], [1..10) ) = true +
+started by( (1..10), (1..10) ) = true
+____
+
+a|
+____
+{empty}(a) coincides(_point1_, _point2_)
+____
+
+a|
+____
+{empty}(a) point1 = point2
+____
+
+a|
+____
+coincides( 5, 5 ) = true +
+coincides( 3, 4 ) = false
+____
+
+a|
+____
+{empty}(b) coincides(_range1_, _range2_)
+____
+
+a|
+____
+{empty}(b) range1.start = range2.start +
+and +
+range1.start included = range2.start included +
+and +
+range1.end = range2.end +
+and +
+range1.end included = range2.end included
+____
+
+a|
+____
+coincides( [1..5], [1..5] ) = true +
+coincides( (1..5), [1..5] ) = false +
+coincides( [1..5], [2..6] ) = false
+____
+
+|===
+
+===== Temporal built-in functions
+
+The following set of functions provide common support utilities when dealing with date or date and time values; listed in *Table _1_*.
+
+.[#_Toc87279025 .anchor]##*Table 95: DMNDiagram attributes*
+[width="100%",cols="3%,24%,24%,24%,25%",options="header",]
+|===
+| a|
+____
+*Name(parameters)*
+____
+
+a|
+____
+*Parameter Domain*
+____
+
+a|
+____
+*Description*
+____
+
+a|
+____
+*Example*
+____
+
+| a|
+____
+day of year( date )
+____
+
+a|
+____
+date or
+
+date and time
+____
+
+a|
+____
+returns the Gregorian number of the day within the year
+____
+
+a|
+____
+day of year( date(2019, 9, 17) ) = 260
+____
+
+| a|
+____
+day of week( date )
+____
+
+a|
+____
+date or date and time
+____
+
+a|
+____
+returns the day of the week according to the Gregorian calendar enumeration: “Monday”, “Tuesday”, “Wednesday”, “Thursday”, “Friday”, “Saturday”, “Sunday”
+____
+
+a|
+____
+day of week( date(2019, 9, 17) ) = "Tuesday"
+____
+
+|month of year( date ) | a|
+____
+date or date and time
+____
+
+a|
+____
+returns the month of the year according to the Gregorian calendar enumeration: “January”, “February”, “March”, “April”, “May”, “June”, “July”, “August”, “September”, “October”, “November”, “December”
+____
+
+a|
+____
+month of year( date(2019, 9, 17) ) = "September"
+____
+
+|week of year( date ) | a|
+____
+date or date and time
+____
+
+a|
+____
+returns the Gregorian number of the week within the year, accordingly to ISO 8601
+____
+
+a|
+____
+week of year( date(2019, 9, 17) ) = 38 +
+week of year( date(2003, 12, 29) ) = 1 +
+week of year( date(2004, 1, 4) ) = 1 +
+week of year( date(2005, 1, 1) ) = 53 +
+week of year( date(2005, 1, 3) ) = 1 +
+week of year( date(2005, 1, 9) ) = 1
+____
+
+|===
+
+===== Sort
+
+____
+Sort a list using an ordering function. For example,
+
+sort(list: [3,1,4,5,2], precedes: function(x,y) x < y) = [1,2,3,4,5]
+____
+
+.[#_Toc87279026 .anchor]##*Table 96: DMNDiagramElement attributes*
+[width="100%",cols="45%,55%",options="header",]
+|===
+a|
+____
+*Parameter name* (* means optional)
+____
+
+a|
+____
+*Domain*
+____
+
+a|
+____
+list
+____
+
+a|
+____
+list of any element, be careful with nulls
+____
+
+a|
+____
+precedes
+____
+
+a|
+____
+boolean function of 2 arguments defined on every pair of list elements
+____
+
+|===
+
+=====  Context function
+
+*Table _81_* defines Context functions
+
+.[#_Toc87279027 .anchor]##*Table 97: DMNShape attributes*
+[width="100%",cols="27%,24%,24%,25%",options="header",]
+|===
+a|
+____
+*Name(parameters)*
+____
+
+a|
+____
+*Parameter domain*
+____
+
+a|
+____
+*Description*
+____
+
+a|
+____
+*Example*
+____
+
+a|
+____
+get value(m, key)
+____
+
+a|
+____
+context, string
+____
+
+a|
+____
+select the value of the entry named key from context m
+____
+
+a|
+____
+_get value (\{key1 : "value1"}, "key1 ") = "value1" +
+get value (\{key1 : "value 1"}, "unexistent-key") = null_
+____
+
+a|
+____
+get entries(m)
+____
+
+a|
+____
+context
+____
+
+a|
+____
+produces a list of key,value pairs from a context m
+____
+
+a|
+____
+_get entries(\{key1 : "value 1 ", key2 : "value2"}) = [ \{ key : "key1 ", value : "value 1" }, \{key : "key2", value :_
+
+_"value2"} ]_
+____
+
+a|
+____
+context(entries)
+____
+
+a|
+____
+_entries_ is a list of contexts, each context item SHALL have two entries having keys: "key" and "value", respectively.
+____
+
+a|
+____
+Returns a new context that includes all specified entries.
+
+If a context item contains additional entries beyond the required "key" and "value" entries, the additional entries are ignored.
+
+If a context item is missing the required "key" and "value" entries, the final result is null.
+
+See also: _get entries()_ built-in function.
+____
+
+a|
+____
+_context([\{key:"a", value:1}, \{key:"b", value:2}]) = \{a:1, b:2}_
+
+_context([\{key:"a", value:1}, \{key:"b", value:2, something: "else"}]) = \{a:1, b:2}_
+
+_context([\{key:"a", value:1}, \{key:"b"}]) = null_
+____
+
+a|
+____
+{empty}(a) context put(context, key, value)
+____
+
+a|
+____
+(a)
+
+_context_ is a context,
+
+_key_ is a string,
+
+_value_ is Any type
+____
+
+a|
+____
+{empty}(a) Returns a new context that includes the new entry, or overriding the existing value if an entry for the same key already exists in the supplied context parameter.
+
+A new entry is added as the last entry of the new context. If overriding an existing entry, the order of the keys maintains the same order as in the original context.
+____
+
+a|
+____
+_context put(\{x:1}, "y", 2) = \{x:1, y:2}_
+
+_context put(\{x:1, y:0}, "y", 2) = \{x:1, y:2}_
+
+_context put(\{x:1, y:0, z:0}, "y", 2) = \{x:1, y:2, z:0}_
+
+_context put(\{x:1}, ["y"], 2) = context put(\{x:1}, "y", 2) = \{x:1, y:2}_
+____
+
+a|
+____
+{empty}(b) context put(context, keys, value)
+____
+
+a|
+____
+(b)
+
+_context_ is a context,
+
+_keys_ is a list of string,
+
+_value_ is Any type
+____
+
+a|
+____
+{empty}(b) Returns the composite of nested invocations to _context put()_ for each item in _keys_ hierarchy in _context_. +
+ +
+If keys is a list of 1 element, this is equivalent to _context put(context, key', value)_, where _key'_ is the only element in the list _keys_. +
+ +
+If keys is a list of 2 or more elements, this is equivalent of calling _context put(context, key', value')_, with: +
+_key'_ is the head element in the list _keys_, +
+_value'_ is the result of invocation of _context put(context', keys', value)_, where: +
+_context'_ is the result of context.key', +
+_keys'_ is the remainder of the list _keys_ without the head element _key'_. +
+ +
+If keys is an empty list or null, the result is null.
+____
+
+a|
+____
+_context put(\{x:1, y: \{a: 0} }, ["y", "a"], 2)_
+
+_= context put(\{x:1, y: \{a: 0} }, "y", context put(\{a: 0}, ["a"], 2))_
+
+_= \{x:1, y: \{a: 2} }_
+
+_context put(\{x:1, y: \{a: 0} }, [], 2) = null_
+____
+
+a|
+____
+context merge(contexts)
+____
+
+a|
+____
+_contexts_ is a list of contexts
+____
+
+a|
+____
+Returns a new context that includes all entries from the given contexts; if some of the keys are equal, the entries are overriden. +
+ +
+The entries are overridden in the same order as specified by the supplied parameter, with new entries added as the last entry in the new context.
+____
+
+a|
+____
+_context merge([\{x:1}, \{y:2}]) = \{x:1, y:2}_
+
+_context merge([\{x:1, y:0}, \{y:2}]) = \{x:1, y:2}_
+____
+
+|===
+
+===== Miscellaneous functions
+
+The following set of functions provide support utilities for several miscellaneous use-cases. For example, when a decision depends on the current date, like deciding the support SLA over the weekends, additional charges for weekend delivery, etc.
+
+It is important to note that the functions in this section are intended to be side-effect-free, but they are not deterministic and not idempotent from the perspective of an external observer.
+
+Vendors are encouraged to guide end-users in ensuring deterministic behavior of the DMN model during testing, for example, through specific configuration.
+
+Users are encouraged to isolate decision logic that uses these functions in specific DRG elements, such as Decisions. This encapsulation enables them to be overridden with synthetic values that remain constant across executions of the DMN model's test cases.
+
+.[#_Toc87279028 .anchor]##*Table 98: DMNEdge attributes*
+[width="100%",cols="34%,33%,33%",options="header",]
+|===
+|*Name(parameters)* |*Parameter domain* |*Description*
+|now() |(none) |returns current date and time
+|today() |(none) |returns current date
+|===
+
+===  Execution Semantics of Decision Services
+
+FEEL gives execution semantics to decision services defined in decision models where FEEL is the expression language. A decision service is semantically equivalent to a FEEL function whose parameters are the decision service inputs, and whose logic is a context assembled from the decision service's decisions and knowledge requirements.
+
+Decision service implementations SHALL return a result as described above, and MAY return additional information such as intermediate results, log records, debugging information, error messages, rule annotations, etc. The format of any additional information is left unspecified.
+
+Every FEEL expression in a decision model has execution semantics. LiteralExpression (FEEL text) semantics is defined in 10.3. Boxed expressions described in 10.2.2 can be mapped to FEEL text and thus also have execution semantics.
+
+Recall that a DecisionService is defined by four lists: inputData, inputDecisions, outputDecisions, and encapsulatedDecisions. The lists are not independent and thus not all required to be specified, e.g., each required decision (direct and indirect) of the outputDecisions must be an encapsulatedDecision, an inputDecision, or required by an inputDecision. For simplicity in the following, we assume that all four lists are correctly and completely specified.
+
+A DecisionService is given execution semantics by mapping it to a FEEL function _F_. Let S be a DecisionService with input data _id1_, _id2_, ..., input decisions _di1_, _di2_, ..., encapsulated decisions _de1_, _de2_, ..., and output decisions _do1_, _do2_, .... Each input data _idi_ has a qualified name _nidi_. Each decision _di_ has a qualified name _ndi_ and a decision logic expression _ed_. The decisions may have knowledge requirements. In particular the decisions may require BusinessKnowledgeModels _bkm1_, _bkm2_, ... and DecisionServices _s1_, _s2_, .... BusinessKnowledgeModels have qualified names _nbkmi_ and encapsulatedLogic _f~bkmi~_. DecisionServices have qualified names _nsi_ and equivalent logic _fsi_, where the equivalent logic is defined recursively, binding _si_ to S.
+
+The syntax for FEEL function _F_ is _funcion(nid1, nid2, ..., ndi1, ndi2, ... ) C.result_, where _C_ is the context _\{_
+
+____
+_ns1 : fs1, ns2 : fs2, ...,_
+
+_nbkm1 : fbkm1, nbkm2 : fbkm2, ...,_
+
+_nde1 : ede1, nde2 : ede2, ...,_
+
+_result: \{ ndo1 : edo1, ndo2 : edo2, . ..}_
+____
+
+such that _si_, _bkmi_, _dei_ and _doi_ are partially ordered by requirements (e.g., the context entry for a required decision comes before a decision that requires it).
+
+The qualified name of an element named E (decision, input data, decision service, or BKM) that is defined in the same decision model as S is simply E. Otherwise, the qualified name is I.E, where I is the name of the import element that refers to the model where E is defined.
+
+The execution semantics of S is FEEL(_F_): a function that when invoked with values from the FEEL semantic domain bound to the parameters representing input data and input decisions, returns:
+
+* {blank}
+* {blank}
+
+____
+In the case of a single output decision(s), the single decision's output value.In the case of multiple output decisions, a context consisting of all the output decisions' output values.XML elements SHALL map to the FEEL semantic domain as specified in section 10.3.3. Otherwise, details of the syntax of input/output data values and mapping to/from FEEL are undefined.
+____
+
+===  Metamodel
+
+image:extracted-media/media/image101.png[image,width=650,height=484]
+
+[#_Toc87278866 .anchor]##*Figure 10‑27: Expression class diagram*
+
+The class Expression is extended to support the four new kinds of boxed expressions introduced by FEEL, namely: Context, FunctionDefinition, Relation and List.
+
+Boxed expressions are Expressions that have a standard diagrammatic representation (see clauses 7.2.1 and 10.2.1). FEEL _contexts_, _function definitions_, _relations_ and _lists_ SHOULD be modeled as Context, FunctionDefinition, Relation and List elements, respectively, and represented as a boxed expression whenever possible; that is, when they are top-level expressions, since an instance of LiteralExpression cannot contain another Expression element.
+
+==== Context metamodel
+
+A Context is composed of any number of contextEntrys, which are instances of ContextEntry.
+
+A Context element is represented diagrammatically as a *boxed context* (clause 10.2.1.4). A FEEL _context_ (grammar rule 57 and clause 10.3.2.6) SHOULD be modeled as a Context element whenever possible.
+
+Context inherits all the attributes and model associations from Expression. *Table _83_* presents the additional attributes and model associations of the Context element.
+
+.[#_Toc87279029 .anchor]##*Table 99: DMNLabel attributes*
+[width="100%",cols="43%,57%",options="header",]
+|===
+a|
+____
+*Attribute*
+____
+
+a|
+____
+*Description*
+____
+
+a|
+____
+*contextEntry*: ContextEntry [*]
+____
+
+a|
+____
+This attributes lists the instances of ContextEntry that compose this Context.
+____
+
+|===
+
+====  ContextEntry metamodel
+
+The class ContextEntry is used to model FEEL _context entries_ when a _context_ is modeled as a Context element. ContextEntry is a specialization of DMNElement, from which it inherits the optional id, description, and label attributes.
+
+An instance of ContextEntry is composed of an optional variable, which is an InformationItem element whose name is the _key_ in the _context entry_, and of a value, which is the instance of Expression that models the _expression_ in the _context entry_.
+
+*Table _84_* presents the attributes and model associations of the ContextEntry element.
+
+.[#_Toc87279030 .anchor]##*Table 100: DMNStyle attributes*
+[width="100%",cols="43%,57%",options="header",]
+|===
+a|
+____
+*Attribute*
+____
+
+a|
+____
+*Description*
+____
+
+a|
+____
+*variable*: InformationItem [0..1]
+____
+
+a|
+____
+The instance of InformationItem that is contained in this ContextEntry, and whose name is the _key_ in the modeled _context_ _entry_
+____
+
+a|
+____
+*value*: Expression
+____
+
+a|
+____
+The instance of Expression that is the _expression_ in this ContextEntry
+____
+
+|===
+
+====  FunctionDefinition metamodel
+
+A FunctionDefinition has formalParameters and a body. A FunctionDefinition element is represented diagrammatically as a *boxed function*, as described in clause. A FEEL _function definition_ (grammar rule 55 and clause 10.3.2.15) SHOULD be modeled as a FunctionDefinition element whenever possible.
+
+FunctionDefinition inherits all the attributes and model associations from Expression. *Table _85_* presents the additional attributes and model associations of the Function Definition element.
+
+.[#_Toc87279031 .anchor]##*Table 101: Depiction Resolution for Decision*
+[width="100%",cols="43%,57%",options="header",]
+|===
+a|
+____
+*Attribute*
+____
+
+a|
+____
+*Description*
+____
+
+a|
+____
+*FormalParameter*: InformationItem [*]
+____
+
+a|
+____
+This attributes lists the instances of InformationItem that are the parameters of this Context.
+____
+
+a|
+____
+*body*: Expression [0..1]
+____
+
+a|
+____
+The instance of Expression that is the body in this FunctionDefinition
+____
+
+a|
+____
+*kind*: FunctionKind = FEEL \{ FEEL | Java | PMML }
+____
+
+a|
+____
+The kind attribute defines the type of the FunctionDefinition. The default value is FEEL. Supported values also include Java and PMML
+____
+
+|===
+
+====  List metamodel
+
+A List is simply a list of element, which are instances of Expressions. A List element is represented diagrammatically as a *boxed list*, as described in clause 10.2.1.5. A FEEL _list_ (grammar rule 54 and clause 10.3.2.15) SHOULD be modeled as a List element whenever possible.
+
+List inherits all the attributes and model associations from Expression. *Table _86_* presents the additional attributes and model associations of the List element.
+
+.[#_Toc87279032 .anchor]##*Table 102: Depiction Resolution for Business Knowledge Model*
+[width="100%",cols="43%,57%",options="header",]
+|===
+a|
+____
+*Attribute*
+____
+
+a|
+____
+*Description*
+____
+
+a|
+____
+*element*: Expression [*]
+____
+
+a|
+____
+This attributes lists the instances of Expression that are the elements in this List.
+____
+
+|===
+
+====  Relation metamodel
+
+A Relation is convenient shorthand for a list of similar contexts. A Relation has a column instead of repeated ContextEntrys, and a List is used for every row, with one of the List’s expression for each column value.
+
+Relation inherits all the attributes and model associations from Expression. *Table _87_* presents the additional attributes and model associations of the Relation element.
+
+.[#_Toc87279033 .anchor]##*Table 103: Depiction Resolution for Input Data*
+[width="100%",cols="43%,57%",options="header",]
+|===
+a|
+____
+*Attribute*
+____
+
+a|
+____
+*Description*
+____
+
+a|
+____
+*row*: List [*]
+____
+
+a|
+____
+This attributes lists the instances of List that compose the rows of this Relation.
+____
+
+a|
+____
+*column*: InformationItem [*]
+____
+
+a|
+____
+This attributes lists the instances of InformationItem that define the columns in this Relation.
+____
+
+|===
+
+==== Conditional metamodel
+
+A Conditional is a visual way to express an if statement.
+
+Conditional inherits all the attributes and model associations from Expression. Table 88 presents the additional attributes and model associations of the Conditional element.
+
+.[#_Toc87279034 .anchor]##*Table 104: Depiction Resolution for Knowledge Source*
+[width="100%",cols="32%,68%",options="header",]
+|===
+a|
+____
+*Attribute*
+____
+
+a|
+____
+*Description*
+____
+
+|===
+
+.[#_Toc87279035 .anchor]##*Table 105: Depiction Resolution of Artifacts*
+[width="100%",cols="33%,67%",options="header",]
+|===
+|*if*: ChildExpression |This attribute holds the expression that is evaluate by the conditional expression.
+|*then*: ChildExpression |This attribute holds the expression that will be evaluated when the condition in the if statement evaluates to *true*.
+|*else*: ChildExpression |This attribute holds the expression that will be evaluated when the condition in the if statement evaluates to *false*.
+|===
+
+==== ChildExpression metamodel
+
+A ChildExpression is used to hold an expression inside a node. Table 89 presents the attributes of a ChildExpression.
+
+.[#_Toc87279036 .anchor]##*Table 106: Depiction Resolution of Decision Service*
+[width="100%",cols="50%,50%",options="header",]
+|===
+a|
+____
+*Attribute*
+____
+
+a|
+____
+*Description*
+____
+
+|*id*: ID[0..1] |Optional identifier for this element. SHALL be unique within its containing Definitions element.
+|*value*: Expression |The instance of Expression that is the expression in this ChildExpression
+|===
+
+==== Filter metamodel
+
+A Filter is a visual way to express list filtering.
+
+Filter inherits all the attributes and model associations from Expression. Table XX presents the additional attributes and model associations of the Filter element.
+
+.[#_Toc87279037 .anchor]##*Table 107: Depiction Resolution of Information Requirement*
+[width="100%",cols="50%,50%",options="header",]
+|===
+a|
+____
+*Attribute*
+____
+
+a|
+____
+*Description*
+____
+
+|*in*: ChildExpression |This attribute holds the expression that is evaluate as the collection to be filtered.
+|*match*: ChildExpression |This attribute holds the expression that is used to filter the collection.
+|===
+
+==== Iterator metamodel
+
+An Iterator is the abstract class for all boxed iteration.
+
+Iterator inherits all the attributes and model associations from Expression. Table 91 presents the additional attributes and model associations of the Iterator element.
+
+.[#_Toc87279038 .anchor]##*Table 108: Depiction Resolution of Knowledge Requirement*
+[width="100%",cols="50%,50%",options="header",]
+|===
+a|
+____
+*Attribute*
+____
+
+a|
+____
+*Description*
+____
+
+|*iteratorVariable*: String |This attribute holds name of the iterator variable that will be populated at each iteration.
+|*in*: TypedChildExpression |This attribute holds the expression that is evaluated as the collection to be processed.
+|===
+
+==== For metamodel
+
+A For is a representation of a loop.
+
+For inherits all the attributes and model associations from Iterator. Table 92 presents the additional attributes and model associations of the For element.
+
+.[#_Toc87279039 .anchor]##*Table 109: Depiction Resolution of Authority Requirement*
+[width="100%",cols="50%,50%",options="header",]
+|===
+a|
+____
+*Attribute*
+____
+
+a|
+____
+*Description*
+____
+
+|*return*: ChildExpression |This attribute holds the expression that is evaluated to create the new collection that will be returned.
+|===
+
+==== Quantified metamodel
+
+A Quantified is an abstraction of an expression that is evaluated on each item of a collection.
+
+Quantified inherits all the attributes and model associations from Iterator. Table XX presents the additional attributes and model associations of Quantified.
+
+.[#_Toc87279040 .anchor]##*Table 110: Depiction Resolution of Association*
+[width="100%",cols="50%,50%",options="header",]
+|===
+a|
+____
+*Attribute*
+____
+
+a|
+____
+*Description*
+____
+
+|*satisfies*: ChildExpression |This attribute holds the expression that is evaluated to determine if the current item satisfies a condition.
+|===
+
+==== Every metamodel
+
+Every is an expression where all “satisfies” needs to be true for it to return true.
+
+Every inherits all the attributes and model associations of Quantified.
+
+==== Some metamodel
+
+Some is an expression where at least one of the “satisfies” needs to be true for it to return true.
+
+Some inherits all the attributes and model associations of Quantified.
+
+=== Examples
+
+A good way to get a quick overview of FEEL is by example.
+
+FEEL expressions may reference other FEEL expressions by name. Named expressions are contained in a context. Expressions are evaluated in a scope, which is a list of contexts in which to resolve names. The result of the evaluation is an element in the FEEL semantic domain.
+
+====  Context
+
+Figure 10‑28 shows the boxed context used for the examples. Such a context could arise in several ways. It could be part of the decision logic for a single, complex decision. Or, it could be a context that is equivalent to part of a DRG as defined in clause 10.4, where _applicant, requested product,_ and _credit history_ are input data instances, _monthly income_ and _monthly outgoings_ are the results of other decisions linked through information requirements, and _PMT_ is a business knowledge model.
+
+.[#_Toc87279041 .anchor]##*Table 111: BPMN tasks relevant to DMN*
+[width="100%",cols="31%,25%,,11%,5%,9%,19%",options="header",]
+|===
+a|
+____
+applicant
+____
+
+a|
+____
+age
+____
+
+|51 | | | |
+| a|
+____
+maritalStatus
+____
+
+|"M" | | | |
+| a|
+____
+existingCustomer
+____
+
+|false | | | |
+| a|
+____
+monthly
+____
+
+a|
+____
+income
+____
+
+| | |10000 |
+| | a|
+____
+repayments
+____
+
+| | |2500 |
+| | a|
+____
+expenses
+____
+
+| | |3000 |
+a|
+____
+requested product
+____
+
+a|
+____
+product type
+____
+
+| | |"STANDARD LOAN" | |
+| a|
+____
+rate
+____
+
+| | |0.25 | |
+| a|
+____
+term
+____
+
+| | |36 | |
+| a|
+____
+amount
+____
+
+| | |100000.00 | |
+a|
+____
+monthly income
+____
+
+|applicant.monthly.income | | | | |
+a|
+____
+monthly outgoings
+____
+
+|applicant.monthly.repayments, applicant.monthly.expenses | | | | |
+a|
+____
+credit history
+____
+
+|record date | a|
+____
+event
+____
+
+| | |weight
+| |date("2008-03-12") | |"home mortgage" | | |100
+| |date("2011-04-01") | |"foreclosure warning" | | |150
+a|
+____
+PMT
+____
+
+|(rate, term, amount) | | | | |
+| |(amount *rate/12) / (1 - (1 + rate/12)**-term) | | | | |
+|===
+
+[#_Toc87278867 .anchor]##*Figure 10‑28: Example context*
+
+Notice that there are 6 top-level context entries, represented by the six rows of the table. The value of the context entry named 'applicant' is itself a context, and the value of the context entry named 'monthly' is itself a context. The value of the context entry named 'monthly outgoings' is a list, the value of the context entry named 'credit history' is a relation, _i.e._ a list of two contexts, one context per row. The value of the context entry named 'PMT' is a function with parameters 'rate', 'term', and 'amount'.
+
+The following examples use the above context. Each example has a pair of equivalent FEEL expressions separated by a horizontal line. Both expressions denote the same element in the semantic domain. The second expression, the ‘answer’, is a literal value.
+
+====  Calculation
+
+[.underline]#monthly income * 12 +
+#120000
+
+The context defines _monthly income_ as _applicant.monthly.income_, which is also defined in the context as 10,000. Twelve times the _monthly income_ is 120,000.
+
+====  If, In
+
+[.underline]#if applicant.maritalStatus in (“M”, “S”) then “valid” else “not valid” +
+#“valid”
+
+The _in_ test determines if the left-hand side expression satisfies the list of values or ranges on the right-hand side. If satisfied, the _if_ expression returns the value of the _then_ expression. Otherwise, the value of the _else_ expression is returned.
+
+====  Sum entries of a list
+
+[.underline]#sum (monthly outgoings) +
+#5500
+
+_Monthly outgoings_ is computed in the context as the list [_applicant.monthly.repayments, applicant.monthly.expenses_], or [2500, 3000]. The square brackets are not required to be written in the boxed context.
+
+==== Invocation of user-defined PMT function
+
+The PMT function defined in the context computes the monthly payments for a given interest rate, number of months, and loan amount.
+
+PMT (requested product . rate, +
+requested product . term, +
+______[.underline]#requested product . amount)_____________________________ +
+#3975.982590125552338278440100112431
+
+A function is invoked textually using a parenthesized argument list after the function name. The arguments are defined in the context, and are 0.25, 36, and 100,000, respectively.
+
+====  Sum weights of a recent credit history
+
+sum (credit history[record date > date (“2011-01-01”)].weight +
+[.underline]#150______________________________________________________________#
+
+This is a complex "one-liner" that will be useful to expand into constituent sub-expressions:
+
+____
+. built-in: _sum_
+
+o path expression ending in _.weight_
+
+ filter: _[record date > date("2011-01-01 ")]_
+
+. name resolved in context: _credit history_
+____
+
+An expression in square brackets following a list expression filters the list. _Credit history_ is defined in the context as a relation, that is, a list of similar contexts. Only the last item in the relation satisfies the filter. The first item is too old. The path expression ending in _.weight_ selects the value of the _weight_ entry from the context or list of contexts satisfied by the filter. The _weight_ of the last item in the credit history is 150. This is the only item that satisfies the filter, so the sum is 150 as well.
+
+==== Determine if credit history contain a bankruptcy event
+
+[.underline]#Some ch in credit history satisfies ch.event = “bankruptcy” +
+#false
+
+The _some_ expression determines if at least one element in a list or relation satisfies a test. There are no bankruptcy events in the credit history in the context.
+
