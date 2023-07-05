@@ -2502,7 +2502,6 @@ ____
 The type of a FEEL expression _e_ is determined from the value *e* = FEEL(_e_, *_s_*) in the semantic domain, where *_s_* is a set of variable bindings (see 10.3.2.11and 10.3.2.12). When an expression appears in a certain context it must be compatible with a type expected in that context, called the _target type_. After the type of the expression is deduced, an implicit conversion from the type of the expression to the target type can be performed sometimes. If an implicit conversion is mandatory but it cannot be performed the result is *null*.
 
 There are several possible type conversions:
-
 - _to singleton list_: +
 When the type of the expression is T and the target type is List<T>
 the expression is converted to a singleton list.
@@ -2517,7 +2516,6 @@ Otherwise the result is *null*.
 
 
 There are several kinds of contexts in which implicit conversions may occur:
-
 - Filter context (10.3.2.5) in which a filter expression is present.
 The expression to be filtered is subject to implicit conversion _to singleton list_.
 - Invocation context (*Table _63_*) in which an argument
