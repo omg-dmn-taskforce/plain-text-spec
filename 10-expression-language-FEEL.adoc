@@ -1522,8 +1522,8 @@ ____
 
 Dates in FEEL can be expressed using either a date literal (see grammar rule 65) or the date() built-in function (See 10.3.4.1). A date in the semantic domain is a sequence of numbers for the year, month, day of the month. The year must be in the range [-999,999,999. .999,999,999]. We use boldface date literals to represent values in the semantic domain.
 
-Where necessary, including the value**_dt_** function (see 10.3.2.3.6),
-a date value is considered to be equivalent to a date time value
+When a date value is subject to implicit conversions (10.3.2.9.4)
+it is considered to be equivalent to a date time value
 in which the time of day is UTC midnight (00:00:00).
 
 ====== date-time
@@ -2501,7 +2501,9 @@ ____
 
 The type of a FEEL expression _e_ is determined from the value *e* = FEEL(_e_, *_s_*) in the semantic domain, where *_s_* is a set of variable bindings (see 10.3.2.11and 10.3.2.12). When an expression appears in a certain context it must be compatible with a type expected in that context, called the _target type_. After the type of the expression is deduced, an implicit conversion from the type of the expression to the target type can be performed sometimes. If an implicit conversion is mandatory but it cannot be performed the result is *null*.
 
-There are several possible type conversions:
+In implicit type conversions,
+the data type is converted automatically without loss of information.
+There are several possible implicit type conversions:
 
 - _to singleton list_: +
 When the type of the expression is T and the target type is List<T>
@@ -2510,28 +2512,34 @@ the expression is converted to a singleton list.
 - _from singleton list_: +
 When the type of the expression is List<T>,
 the value of the expression is a singleton list and the target type is T,
-the expression is converted by unwraping the first element.
+the expression is converted by unwrapping the first element.
 
-- _conforms to_: +
-When the type of the expression is T~1~, the target type is T~2~,
-and T~1~ conforms to T~2~ the value of expression remains unchanged.
+- _from date to date and time_: +
+When the type of the expression is date and the target type is date and time,
+the expression is converted to a date time value
+in which the time of day is UTC midnight (00:00:00).
+
+
+There is one type of conversion to handle semantic errors:
+
+- _conforms to_ (as defined in 10.3.2.9.2 Type Conformance): +
+When the type of the expression is S, the target type is T,
+and S conforms to T the value of expression remains unchanged.
 Otherwise the result is *null*.
 
 
-There are several kinds of contexts in which implicit conversions may occur:
+There are several kinds of contexts in which conversions may occur:
 
 - Filter context (10.3.2.5) in which a filter expression is present.
 The expression to be filtered is subject to implicit conversion _to singleton list_.
 
-- Invocation context (*Table _63_*) in which an argument
+- Invocation context (*Table _63_*) in which an actual parameter
 is bound to a formal parameter of a function.
-The arguments are subject to implicit conversion _from singleton list_.
+The actual parameter is subject to implicit conversions.
 
-- Binding contexts in which the value of an expression is bound to a variable
-with associated type information
-(e.g. binding actual parameters to formal parameters in an invocation,
-or binding the result of a decision’s logic to the decision’s output variable).
-The expression is subject to _conforms to_ conversion.
+- Binding contexts in which the result of a DRG Element’s logic is bound to the output variable.
+If after applying the implicit conversions the converted value and the target type do not conform,
+the _conforms to_ conversion is applied.
 
 
 =======  Examples
